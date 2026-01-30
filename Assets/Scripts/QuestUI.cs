@@ -8,10 +8,15 @@ public class QuestUI : MonoBehaviour
     [SerializeField] private Text questText;
 
     private void Awake()
-    {
-        Instance = this;
-        Refresh();
-    }
+{
+    Instance = this;
+}
+
+private void Start()
+{
+    Invoke(nameof(Refresh), 0.1f); // refresh after QuestManager initializes
+}
+
 
     public static void RefreshIfExists()
     {
