@@ -11,8 +11,8 @@ public class PlayerSpawner : MonoBehaviour
         string want = PlayerPrefs.GetString("SpawnId", "");
         if (string.IsNullOrEmpty(want)) return;
 
-        var points = FindObjectsOfType<SpawnPoint>();
-        foreach (var p in points)
+        var spawns = Object.FindObjectsByType<SpawnPoint>(FindObjectsSortMode.None);
+        foreach (var p in spawns)
         {
             if (p.spawnId == want)
             {

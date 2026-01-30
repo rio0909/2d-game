@@ -1,9 +1,3 @@
-using UnityEngine;
-
-public class NewEmptyCSharpScript
-{
-    
-}
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +5,6 @@ using UnityEngine.UI;
 public class QuestUI : MonoBehaviour
 {
     public static QuestUI Instance { get; private set; }
-
     [SerializeField] private Text questText;
 
     private void Awake()
@@ -38,7 +31,6 @@ public class QuestUI : MonoBehaviour
             any = true;
             sb.AppendLine("• " + q);
         }
-
         if (!any) sb.AppendLine("• (none)");
 
         questText.text = sb.ToString();
