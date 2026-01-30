@@ -58,6 +58,7 @@
     <Compile Include="Assets\Scripts\PlayerSpawner.cs" />
     <Compile Include="Assets\Scripts\PlayerMovement2D.cs" />
     <Compile Include="Assets\Scripts\DialogueUI.cs" />
+    <Compile Include="Assets\Scripts\QuestUI.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\TestSync.cs.txt" />
