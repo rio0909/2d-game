@@ -1,64 +1,47 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerMovement2D : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] private float moveSpeed = 4.5f;
+    public float moveSpeed = 5f;
 
     [Header("Components")]
-    [SerializeField] private Animator animator; 
-    [SerializeField] private SpriteRenderer spriteRenderer; 
+    public Rigidbody2D rb;
+    public Animator animator;
+    public SpriteRenderer spriteRenderer;
 
-    private Rigidbody2D rb;
-    private Vector2 input;
+    private float horizontalInput;
 
-    private void Awake()
+    void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
-        rb.gravityScale = 0f;
-        rb.freezeRotation = true;
-        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous; 
-
-        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
-        if (animator == null) animator = GetComponent<Animator>();
+        // Keep gravity so he sits on the floor
+        rb.gravityScale = 2f; 
+        rb.freezeRotation = true; 
     }
 
-    private void Update()
+    void Update()
     {
-        // 1. Get Input
-        input.x = Input.GetAxisRaw("Horizontal");
-        input.y = Input.GetAxisRaw("Vertical");
+        // 1. Get Input (Left/Right only)
+        horizontalInput = Input.GetAxisRaw("Horizontal");
 
-        // 2. Normalize
-        if (input.sqrMagnitude > 1f) input.Normalize();
-
-        // 3. Handle Animation & Flipping
+        // 2. Animate
         UpdateAnimation();
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        // 4. Move
-        rb.MovePosition(rb.position + input * moveSpeed * Time.fixedDeltaTime);
+        // 3. Move Physics
+        // We keep 'rb.velocity.y' so gravity still works (he falls if he walks off a cliff)
+        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
     }
 
-    private void UpdateAnimation()
+    void UpdateAnimation()
     {
-        if (animator == null) return;
+        // Send Speed to Animator
+        animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
 
-        // FIXED: Only sending "Speed" because that is the only parameter we made.
-        // We removed "Horizontal" and "Vertical" to stop the errors.
-        animator.SetFloat("Speed", input.sqrMagnitude);
-
-        // Flipping Logic
-        if (input.x > 0)
-        {
-            spriteRenderer.flipX = false;
-        }
-        else if (input.x < 0)
-        {
-            spriteRenderer.flipX = true;
-        }
+        // Flip Sprite
+        if (horizontalInput > 0) spriteRenderer.flipX = false;
+        else if (horizontalInput < 0) spriteRenderer.flipX = true;
     }
 }
