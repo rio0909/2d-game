@@ -10,38 +10,40 @@ public class PlayerMovement2D : MonoBehaviour
     public Animator animator;
     public SpriteRenderer spriteRenderer;
 
-    private float horizontalInput;
+    private Vector2 movement;
 
     void Start()
     {
-        // Keep gravity so he sits on the floor
-        rb.gravityScale = 2f; 
-        rb.freezeRotation = true; 
+        rb.gravityScale = 0f; // Ensures he doesn't fall
+        rb.freezeRotation = true;
     }
 
     void Update()
     {
-        // 1. Get Input (Left/Right only)
-        horizontalInput = Input.GetAxisRaw("Horizontal");
+        // 1. Get Input for X (Left/Right) AND Y (Up/Down)
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical"); // This was missing before!
 
-        // 2. Animate
+        // 2. Normalize (prevents super-speed diagonal movement)
+        movement = movement.normalized;
+
+        // 3. Animation
         UpdateAnimation();
     }
 
     void FixedUpdate()
     {
-        // 3. Move Physics
-        // We keep 'rb.velocity.y' so gravity still works (he falls if he walks off a cliff)
-        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
+        // 4. Move Rio
+        rb.linearVelocity = movement * moveSpeed;
     }
 
     void UpdateAnimation()
     {
-        // Send Speed to Animator
-        animator.SetFloat("Speed", Mathf.Abs(horizontalInput));
+        // Animate if moving in ANY direction
+        animator.SetFloat("Speed", movement.sqrMagnitude);
 
-        // Flip Sprite
-        if (horizontalInput > 0) spriteRenderer.flipX = false;
-        else if (horizontalInput < 0) spriteRenderer.flipX = true;
+        // Flip Sprite (Only flip for Left/Right)
+        if (movement.x > 0) spriteRenderer.flipX = false;
+        else if (movement.x < 0) spriteRenderer.flipX = true;
     }
 }
