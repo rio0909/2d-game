@@ -6,6 +6,6 @@ public class NPC_Talk : MonoBehaviour, IInteractable
     public void Interact()
     {
         Debug.Log("Hi Rio! I see you have the Pro coding setup.");
-        // Later, we will add a real dialogue window here!
+        // Later, we will add a real dialogue window 
     }
 }
