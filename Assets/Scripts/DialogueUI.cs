@@ -1,94 +1,92 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UI; // Needed for the Face Image
+using TMPro;
 
 public class DialogueUI : MonoBehaviour
 {
     public static DialogueUI Instance { get; private set; }
 
+    // --- FLAG: Tells the PlayerInteract script if we are busy ---
+    public bool isOpen { get; private set; } = false;
+
     [Header("UI References")]
-    [SerializeField] private GameObject root;
-    [SerializeField] private Text nameText;
-    [SerializeField] private Text bodyText;
+    [SerializeField] private GameObject root;        // The Beige Panel
+    [SerializeField] private Image portraitImage;    // <--- NEW: The Face Image Slot
+    [SerializeField] private TextMeshProUGUI nameText; 
+    [SerializeField] private TextMeshProUGUI bodyText;
 
     [Header("Typewriter Settings")]
     [SerializeField, Range(0.005f, 0.08f)] private float charDelay = 0.02f;
 
-    [Header("Choices")]
-    [SerializeField] private GameObject choicesRoot;      // Assign your "Choices" GameObject here
-    [SerializeField] private Button choiceButtonPrefab;   // Assign your ChoiceButton prefab here
-
     private string[] lines;
     private int index;
-
     private Coroutine typeRoutine;
     private bool isTyping;
     private string fullLine;
 
-    private DialogueChoice[] currentChoices;
-
     private void Awake()
     {
         Instance = this;
-
         if (root != null) root.SetActive(false);
-        if (choicesRoot != null) choicesRoot.SetActive(false);
     }
 
     private void Update()
     {
-        if (root == null || !root.activeSelf) return;
+        // If the box is closed, stop listening for input
+        if (!isOpen) return;
 
-        // Space behavior:
-        // - If typing: instantly finish current line
-        // - If not typing: go to next line (only if choices are not open)
-        if (Input.GetKeyDown(KeyCode.Space))
+        // Press SPACE or E to advance
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E))
         {
             if (isTyping)
             {
-                FinishLineInstant();
+                FinishLineInstant(); // Skip typing effect
             }
             else
             {
-                // If choices are visible, don't advance lines on Space (prevents skipping)
-                if (choicesRoot == null || !choicesRoot.activeSelf)
-                    Next();
+                Next(); // Go to next line
             }
         }
-
-        // Choice hotkeys (1/2/3)
-        if (choicesRoot != null && choicesRoot.activeSelf && currentChoices != null)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1)) SelectChoice(0);
-            if (Input.GetKeyDown(KeyCode.Alpha2) && currentChoices.Length > 1) SelectChoice(1);
-            if (Input.GetKeyDown(KeyCode.Alpha3) && currentChoices.Length > 2) SelectChoice(2);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Escape)) Hide();
     }
 
-    public void Show(string speaker, string[] dialogueLines)
+    // --- UPDATED SHOW FUNCTION (Now accepts a Face!) ---
+    public void Show(string speaker, string[] dialogueLines, Sprite face)
     {
         if (dialogueLines == null || dialogueLines.Length == 0) return;
 
         lines = dialogueLines;
         index = 0;
 
+        // 1. Set Name
         nameText.text = speaker;
+
+        // 2. Set Face (If we have one)
+        if (face != null)
+        {
+            portraitImage.sprite = face;
+            portraitImage.gameObject.SetActive(true);
+        }
+        else
+        {
+            // If no face provided, hide the image slot so it doesn't look like a white block
+            portraitImage.gameObject.SetActive(false);
+        }
+
+        // 3. Open UI
         root.SetActive(true);
+        isOpen = true; // Lock the player movement
 
-        // Ensure choices are hidden when starting a new dialogue
-        HideChoices();
-
+        // 4. Start Typing
         StartTyping(lines[index]);
     }
 
     private void Next()
     {
         index++;
-        if (lines == null || index >= lines.Length)
+        if (index >= lines.Length)
         {
-            Hide();
+            Hide(); // End of conversation
             return;
         }
 
@@ -97,25 +95,21 @@ public class DialogueUI : MonoBehaviour
 
     private void StartTyping(string line)
     {
-        // Stop any previous typewriter coroutine
-        if (typeRoutine != null)
-            StopCoroutine(typeRoutine);
-
+        if (typeRoutine != null) StopCoroutine(typeRoutine);
+        
         fullLine = line;
-        bodyText.text = "";
+        bodyText.text = ""; // Clear text box
         typeRoutine = StartCoroutine(TypeLine(fullLine));
     }
 
     private IEnumerator TypeLine(string line)
     {
         isTyping = true;
-
         for (int i = 0; i < line.Length; i++)
         {
             bodyText.text += line[i];
             yield return new WaitForSeconds(charDelay);
         }
-
         isTyping = false;
         typeRoutine = null;
     }
@@ -123,102 +117,17 @@ public class DialogueUI : MonoBehaviour
     private void FinishLineInstant()
     {
         if (!isTyping) return;
+        if (typeRoutine != null) StopCoroutine(typeRoutine);
 
-        if (typeRoutine != null)
-            StopCoroutine(typeRoutine);
-
-        bodyText.text = fullLine;
+        bodyText.text = fullLine; // Show full text immediately
         isTyping = false;
         typeRoutine = null;
     }
 
-    // -----------------------
-    // Choices
-    // -----------------------
-    public void ShowChoices(DialogueChoice[] choices)
-    {
-        if (choicesRoot == null || choiceButtonPrefab == null)
-        {
-            Debug.LogWarning("DialogueUI: choicesRoot or choiceButtonPrefab is not assigned in the Inspector.");
-            return;
-        }
-
-        if (choices == null || choices.Length == 0)
-        {
-            HideChoices();
-            return;
-        }
-
-        currentChoices = choices;
-        choicesRoot.SetActive(true);
-
-        // Clear old buttons
-        foreach (Transform child in choicesRoot.transform)
-            Destroy(child.gameObject);
-
-        // Create buttons
-        for (int i = 0; i < choices.Length; i++)
-        {
-            int idx = i;
-
-            Button btn = Instantiate(choiceButtonPrefab, choicesRoot.transform);
-
-            Text label = btn.GetComponentInChildren<Text>();
-            if (label != null)
-                label.text = $"{i + 1}. {choices[i].text}";
-
-            btn.onClick.RemoveAllListeners();
-            btn.onClick.AddListener(() => SelectChoice(idx));
-        }
-    }
-
-    private void SelectChoice(int choiceIndex)
-    {
-        if (currentChoices == null) return;
-        if (choiceIndex < 0 || choiceIndex >= currentChoices.Length) return;
-
-        var chosen = currentChoices[choiceIndex];
-
-        HideChoices();
-
-        // Run the choice action
-        chosen?.onSelect?.Invoke();
-    }
-
-    private void HideChoices()
-    {
-        currentChoices = null;
-
-        if (choicesRoot != null)
-        {
-            choicesRoot.SetActive(false);
-
-            // Optional: clear buttons so old ones don't flash next time
-            foreach (Transform child in choicesRoot.transform)
-                Destroy(child.gameObject);
-        }
-    }
-
-    // -----------------------
-    // Close
-    // -----------------------
     public void Hide()
     {
-        // Stop typewriter if it was running
-        if (typeRoutine != null)
-            StopCoroutine(typeRoutine);
-
-        isTyping = false;
-        typeRoutine = null;
-
-        HideChoices();
-
+        isOpen = false; // Unlock the player
         if (root != null) root.SetActive(false);
-
-        lines = null;
-        index = 0;
-
-        // Optional: clear text when closing
-        if (bodyText != null) bodyText.text = "";
+        isTyping = false;
     }
 }
