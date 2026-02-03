@@ -434,7 +434,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Cyber \nScholar"
+  m_text: "Study\n   verse"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 270a793abb5372b438dcb2afdcdd2829, type: 2}
   m_sharedMaterial: {fileID: 9178578325592233804, guid: 270a793abb5372b438dcb2afdcdd2829, type: 2}
