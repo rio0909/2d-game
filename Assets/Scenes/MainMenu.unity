@@ -1925,7 +1925,7 @@ GameObject:
   - component: {fileID: 957647770}
   - component: {fileID: 957647771}
   m_Layer: 5
-  m_Name: Slider
+  m_Name: Volume_Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2380,7 +2380,7 @@ GameObject:
   - component: {fileID: 1111072516}
   - component: {fileID: 1111072515}
   m_Layer: 5
-  m_Name: Dropdown
+  m_Name: Resolution_Dropdown
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2475,7 +2475,7 @@ MonoBehaviour:
       - m_Target: {fileID: 772631668}
         m_TargetAssemblyTypeName: SettingsMenu, Assembly-CSharp
         m_MethodName: SetResolution
-        m_Mode: 3
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
