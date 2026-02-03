@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a9b5a2fa13c14043b661731755e41a4, type: 3}
   m_Name: TitleAnim
   m_EditorClassIdentifier: BattleText::PixelBattleText.TextAnimation
-  font: {fileID: 0}
+  font: {fileID: 11400000, guid: 554d25ed6addaf34f9824d8cfe5a5d44, type: 2}
   textSize: 16
   alignment: 0
   transitionDuration: 0.5
