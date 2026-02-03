@@ -1,6 +1,6 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI; // Needed for the Face Image
+using UnityEngine.UI; 
 using TMPro;
 
 public class DialogueUI : MonoBehaviour
@@ -12,7 +12,7 @@ public class DialogueUI : MonoBehaviour
 
     [Header("UI References")]
     [SerializeField] private GameObject root;        // The Beige Panel
-    [SerializeField] private Image portraitImage;    // <--- NEW: The Face Image Slot
+    [SerializeField] private Image portraitImage;    // The Face Image Slot
     [SerializeField] private TextMeshProUGUI nameText; 
     [SerializeField] private TextMeshProUGUI bodyText;
 
@@ -25,6 +25,9 @@ public class DialogueUI : MonoBehaviour
     private bool isTyping;
     private string fullLine;
 
+    // --- NEW: Timer to prevent "Instant Skip" bug ---
+    private float openTime; 
+
     private void Awake()
     {
         Instance = this;
@@ -35,6 +38,10 @@ public class DialogueUI : MonoBehaviour
     {
         // If the box is closed, stop listening for input
         if (!isOpen) return;
+
+        // --- THE FIX: Ignore input for 0.1 seconds after opening ---
+        // This prevents the "E" key you pressed to talk from skipping the text immediately.
+        if (Time.time - openTime < 0.1f) return;
 
         // Press SPACE or E to advance
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.E))
@@ -50,7 +57,6 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
-    // --- UPDATED SHOW FUNCTION (Now accepts a Face!) ---
     public void Show(string speaker, string[] dialogueLines, Sprite face)
     {
         if (dialogueLines == null || dialogueLines.Length == 0) return;
@@ -69,11 +75,11 @@ public class DialogueUI : MonoBehaviour
         }
         else
         {
-            // If no face provided, hide the image slot so it doesn't look like a white block
             portraitImage.gameObject.SetActive(false);
         }
 
-        // 3. Open UI
+        // 3. Open UI & RECORD TIME
+        openTime = Time.time; // <--- Mark the exact moment we opened it
         root.SetActive(true);
         isOpen = true; // Lock the player movement
 
