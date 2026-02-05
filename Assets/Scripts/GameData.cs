@@ -37,4 +37,9 @@ public static class GameData
         hasLabAccess = false;
         Debug.Log("Data Wiped.");
     }
+    public static void Start()
+{
+    // Automatically load saved data when the game turns on
+    GameData.LoadGame();
+}
 }

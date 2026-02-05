@@ -14,4 +14,5 @@ public class MainMenuManager : MonoBehaviour
         Debug.Log("The game has quit!"); // Just for testing in Editor
         Application.Quit();
     }
+    
 }

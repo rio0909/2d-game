@@ -11,13 +11,12 @@ public class NPCDialogue : MonoBehaviour, IInteractable
     public string[] lines;
 
     private SpriteRenderer sr;
-    // We don't save 'player' here anymore to avoid stale references
 
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
     }
-
+    
     public void Interact()
     {
         // 1. FIND THE PLAYER RIGHT NOW (Fresh check)
@@ -27,9 +26,6 @@ public class NPCDialogue : MonoBehaviour, IInteractable
         // 2. LOOK AT PLAYER
         if (playerTransform != null)
         {
-            // Debug line to prove it found the player
-            Debug.Log("Looking at Player!"); 
-
             // If player is to the LEFT, face LEFT
             if (playerTransform.position.x < transform.position.x) 
             {
@@ -41,23 +37,32 @@ public class NPCDialogue : MonoBehaviour, IInteractable
                 sr.flipX = false;
             }
         }
-        else
-        {
-            Debug.LogError("COULD NOT FIND PLAYER! Check your Player Tag!");
-        }
 
-        // 3. DO THE REST (Dialogue code...)
+        // 3. PREPARE LINES (Replace {player} with real name)
         string[] finalLines = new string[lines.Length];
         for (int i = 0; i < lines.Length; i++)
         {
             finalLines[i] = lines[i].Replace("{player}", GameData.playerName);
         }
 
+        // 4. SHOW DIALOGUE UI
         DialogueUI.Instance.Show(npcName, finalLines, face);
 
+        // --- SPECIAL NPC LOGIC ---
+        
+        // Logic for Prof. Rio
         if (npcName == "Prof. Rio")
         {
             GameData.hasLabAccess = true;
+            GameData.SaveGame();
+            Debug.Log("Access Granted: Lab Unlocked!");
+        }
+
+        // Logic for Prof. Jessi (New!)
+        if (npcName == "Prof. Jessi")
+        {
+            Debug.Log("Prof. Jessi is teaching class.");
+            // Later you can add: GameData.hasAttendedClass = true;
         }
     }
 }
