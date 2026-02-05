@@ -1,5 +1,5 @@
 using UnityEngine;
-
+// ttt
 public class TriggerDebug : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D other)
