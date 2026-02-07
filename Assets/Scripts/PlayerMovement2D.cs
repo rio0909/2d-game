@@ -12,29 +12,48 @@ public class PlayerMovement2D : MonoBehaviour
 
     private Vector2 movement;
 
+    // --- NEW: Automatically find components to fix the "Unassigned Reference" error ---
+    void Awake()
+    {
+        // If the slots are empty, find the components on this object automatically
+        if (rb == null) rb = GetComponent<Rigidbody2D>();
+        if (animator == null) animator = GetComponent<Animator>();
+        if (spriteRenderer == null) spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
     void Start()
     {
-        rb.gravityScale = 0f; // Ensures he doesn't fall
-        rb.freezeRotation = true;
+        if (rb != null)
+        {
+            rb.gravityScale = 0f; // Ensures he doesn't fall
+            rb.freezeRotation = true;
+        }
     }
 
     void Update()
     {
         // 1. Get Input for X (Left/Right) AND Y (Up/Down)
         movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical"); // This was missing before!
+        movement.y = Input.GetAxisRaw("Vertical");
 
         // 2. Normalize (prevents super-speed diagonal movement)
-        movement = movement.normalized;
+        if(movement.magnitude > 1) movement = movement.normalized;
 
-        // 3. Animation
-        UpdateAnimation();
+        // 3. Animation (Only run if components exist)
+        if (animator != null && spriteRenderer != null)
+        {
+            UpdateAnimation();
+        }
     }
 
     void FixedUpdate()
     {
         // 4. Move Rio
-        rb.linearVelocity = movement * moveSpeed;
+        if (rb != null)
+        {
+            // Note: In Unity 6 this is 'linearVelocity', in older Unity it is 'velocity'
+            rb.linearVelocity = movement * moveSpeed;
+        }
     }
 
     void UpdateAnimation()
