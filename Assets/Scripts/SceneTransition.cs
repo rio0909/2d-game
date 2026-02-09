@@ -19,19 +19,29 @@ public class SceneTransition : MonoBehaviour
     void Start()
     {
         if (customCursor != null) Cursor.SetCursor(customCursor, Vector2.zero, CursorMode.ForceSoftware);
-        if(desktopCanvas != null) desktopCanvas.SetActive(false);
-        if(blackScreenPanel != null) blackScreenPanel.color = new Color(0, 0, 0, 0);
+        if (desktopCanvas != null) desktopCanvas.SetActive(false);
+        // Ensure black screen is transparent at start
+        if (blackScreenPanel != null) blackScreenPanel.color = new Color(0, 0, 0, 0);
     }
 
+    // Call this when sitting down at the PC
     public void EnterComputerMode()
     {
-        StartCoroutine(TransitionSequence());
+        StopAllCoroutines();
+        StartCoroutine(TransitionToPC());
     }
 
-    IEnumerator TransitionSequence()
+    // Call this from OSManager when shutting down
+    public void ExitComputerMode()
+    {
+        StopAllCoroutines();
+        StartCoroutine(TransitionToHall());
+    }
+
+    IEnumerator TransitionToPC()
     {
         float alpha = 0;
-        // Fade OUT
+        // 1. Fade to Black
         while (alpha < 1)
         {
             alpha += Time.deltaTime * fadeSpeed;
@@ -39,11 +49,35 @@ public class SceneTransition : MonoBehaviour
             yield return null;
         }
 
-        // Switch
+        // 2. Switch Views
         if (desktopCanvas != null) desktopCanvas.SetActive(true);
-        if (player != null) player.SetActive(false);
+        if (player != null) player.SetActive(false); // Hides player in PC mode
 
-        // Fade IN
+        // 3. Fade Out Black
+        while (alpha > 0)
+        {
+            alpha -= Time.deltaTime * fadeSpeed;
+            if (blackScreenPanel != null) blackScreenPanel.color = new Color(0, 0, 0, alpha);
+            yield return null;
+        }
+    }
+
+    IEnumerator TransitionToHall()
+    {
+        float alpha = 0;
+        // 1. Fade to Black (from PC screen)
+        while (alpha < 1)
+        {
+            alpha += Time.deltaTime * fadeSpeed;
+            if (blackScreenPanel != null) blackScreenPanel.color = new Color(0, 0, 0, alpha);
+            yield return null;
+        }
+
+        // 2. Switch Views back to Lecture Hall
+        if (desktopCanvas != null) desktopCanvas.SetActive(false);
+        if (player != null) player.SetActive(true); // REVEALS player in Hall
+
+        // 3. Fade Out Black so we can see the room
         while (alpha > 0)
         {
             alpha -= Time.deltaTime * fadeSpeed;

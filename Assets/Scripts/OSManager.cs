@@ -6,24 +6,15 @@ public class OSManager : MonoBehaviour
 {
     [Header("UI Elements")]
     public GameObject startMenuPanel; 
-    public GameObject desktopCanvas;  // The Computer Screen
+    public GameObject desktopCanvas;  // This should be your DesktopPanel
 
     [Header("Shutdown FX")]
-    public GameObject shutdownScreen; // The Black Screen / Video
+    public GameObject shutdownScreen; // The Video Screen
     public VideoPlayer shutdownPlayer; 
     public float videoDuration = 3f;   
 
     [Header("Player Reference")]
-    public GameObject player; // We need this to turn him back on!
-
-    void Start()
-    {
-        // --- MAGIC FIX: Auto-find the player if the slot is empty ---
-        if (player == null)
-        {
-            player = GameObject.FindGameObjectWithTag("Player");
-        }
-    }
+    public GameObject player; 
 
     public void TriggerShutdownSequence()
     {
@@ -44,10 +35,10 @@ public class OSManager : MonoBehaviour
             shutdownPlayer.Play();
         }
 
-        // 3. Wait
+        // 3. Wait for video to finish
         yield return new WaitForSeconds(videoDuration);
 
-        // 4. Close Everything
+        // 4. Run the transition back to the Hall
         CloseComputer();
     }
 
@@ -56,19 +47,20 @@ public class OSManager : MonoBehaviour
         // Hide the Shutdown Screen
         if(shutdownScreen != null) shutdownScreen.SetActive(false);
 
-        // Hide the Computer UI
-        desktopCanvas.SetActive(false);
+        // FIND THE TRANSITION SCRIPT
+        SceneTransition transition = FindObjectOfType<SceneTransition>();
         
-        // --- CRITICAL FIX: Turn Rio back ON ---
-        if (player != null)
+        if (transition != null)
         {
-            player.SetActive(true);
+            // This calls the "ReturnSequence" in your other script to fix everything
+            transition.ExitComputerMode();
         }
         else
         {
-            // If we still can't find him, try one last time
-            GameObject foundPlayer = GameObject.FindGameObjectWithTag("Player");
-            if(foundPlayer != null) foundPlayer.SetActive(true);
+            // EMERGENCY BACKUP: If no transition script is found, force it manually
+            if (desktopCanvas != null) desktopCanvas.SetActive(false);
+            if (player != null) player.SetActive(true);
+            Debug.LogWarning("SceneTransition script not found! Using manual backup.");
         }
     }
 }
