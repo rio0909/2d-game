@@ -21,7 +21,7 @@ public class QuizManager : MonoBehaviour
     [Header("Video Screens")]
     public VideoPlayer winVideo;   
     public VideoPlayer loseVideo;  
-
+ 
     [Header("Game Settings")]
     public int maxLives = 3;
     private int currentLives;
@@ -85,7 +85,7 @@ public class QuizManager : MonoBehaviour
 
     void UpdateUI()
     {
-        if(scoreText != null) scoreText.text = "SCORE: " + currentScore;
+        if(scoreText != null) scoreText.text = "= " + currentScore;
         if(levelText != null) levelText.text = "LEVEL: " + currentLevel;
         
         for (int i = 0; i < livesIcons.Length; i++)
@@ -146,17 +146,23 @@ public class QuizManager : MonoBehaviour
     {
         if (!isQuizActive) return;
 
-        // Get the correct answer ID for the current question
-        int correctID = allQuestions[currentQuestionIndex].correctAnswerID;
+        // --- THIS WAS THE MISSING LINE causing the error ---
+        int correctID = allQuestions[currentQuestionIndex].correctAnswerID; 
+        // --------------------------------------------------
 
-        // --- REPLACE EVERYTHING INSIDE THIS IF STATEMENT ---
         if (buttonID == correctID)
         {
             Debug.Log("Correct!");
-            currentScore += 100; 
+
+            // --- SAVE SYSTEM ---
+            int pointsEarned = 100;
+            currentScore += pointsEarned;      
+            SaveManager.AddCoins(pointsEarned); 
+            // -------------------
+
             currentQuestionIndex++; 
 
-            // 1. Check if the WHOLE GAME is won (Question 15)
+            // Check for Win
             if (currentQuestionIndex >= allQuestions.Length)
             {
                 isQuizActive = false;
@@ -164,23 +170,21 @@ public class QuizManager : MonoBehaviour
                 if(level2CompletePanel != null) level2CompletePanel.SetActive(false); 
                 if(winVideo != null) { winVideo.gameObject.SetActive(true); winVideo.Play(); }
             }
-            // 2. Show Level 1 Complete Panel (Question 5)
+            // Check for Level 1 Complete
             else if (currentQuestionIndex == 5)
             {
                 if(levelCompletePanel != null) levelCompletePanel.SetActive(true);
             }
-            // 3. Show Level 2 Complete Panel (Question 10)
+            // Check for Level 2 Complete
             else if (currentQuestionIndex == 10)
             {
                 if(level2CompletePanel != null) level2CompletePanel.SetActive(true);
             }
-            // 4. Otherwise, just load the next question
             else
             {
                 LoadQuestion();
             }
         }
-        // ---------------------------------------------------
         else
         {
             Debug.Log("Wrong!");
@@ -189,7 +193,6 @@ public class QuizManager : MonoBehaviour
 
             if (currentLives <= 0)
             {
-                Debug.Log("GAME LOST!");
                 isQuizActive = false;
                 if(loseVideo != null) 
                 {
@@ -198,7 +201,7 @@ public class QuizManager : MonoBehaviour
                 }
             }
         }
-        UpdateUI(); // Refresh score text
+        UpdateUI(); 
     }
 
     void OpenLevelComplete()
@@ -247,16 +250,22 @@ public class QuizManager : MonoBehaviour
     {
         if (!isQuizActive) return;
 
-        // Get what the user typed and what you put in Answers Element 0
+        // --- THESE ARE THE MISSING LINES ---
+        // We need to define these variables before we can use them!
         string userTyped = blankInput.text.Trim().ToLower();
         string correctAnswer = allQuestions[currentQuestionIndex].answers[0].Trim().ToLower();
+        // -----------------------------------
 
         if (userTyped == correctAnswer)
         {
-            currentScore += 150; // Bonus points for typing!
+            // --- SAVE SYSTEM ---
+            int pointsEarned = 150;
+            currentScore += pointsEarned;      
+            SaveManager.AddCoins(pointsEarned); 
+            // -------------------
+
             currentQuestionIndex++;
             
-            // Check for Win or Next Question
             if (currentQuestionIndex >= allQuestions.Length)
             {
                 isQuizActive = false;
@@ -269,6 +278,7 @@ public class QuizManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("Wrong!"); // Optional: Log for debugging
             currentLives--;
             UpdateUI();
             if (currentLives <= 0)
