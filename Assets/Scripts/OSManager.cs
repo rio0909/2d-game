@@ -16,6 +16,38 @@ public class OSManager : MonoBehaviour
     [Header("Player Reference")]
     public GameObject player; 
 
+    // --- NEW SECTION: WALLPAPER SETTINGS ---
+    [Header("Wallpaper Settings")]
+    public GameObject defaultScreen;       // Drag 'Desktop_PanelScreen' here
+    public GameObject stylishWallpaper;    // Drag 'Stylish_Wallpaper' here
+
+    // This function runs AUTOMATICALLY every time you open the computer
+    void OnEnable()
+    {
+        CheckAndSetWallpaper();
+    }
+
+    public void CheckAndSetWallpaper()
+    {
+        // 1. Read the Save File (0 = Default, 1 = Stylish)
+        int wallpaperID = PlayerPrefs.GetInt("WallpaperID", 0);
+
+        // 2. Toggle the correct objects
+        if (wallpaperID == 1)
+        {
+            // User bought the Stylish one!
+            if (defaultScreen != null) defaultScreen.SetActive(false);
+            if (stylishWallpaper != null) stylishWallpaper.SetActive(true);
+        }
+        else
+        {
+            // User has default (or hasn't bought anything yet)
+            if (defaultScreen != null) defaultScreen.SetActive(true);
+            if (stylishWallpaper != null) stylishWallpaper.SetActive(false);
+        }
+    }
+    // ---------------------------------------
+
     public void TriggerShutdownSequence()
     {
         StartCoroutine(PlayShutdownAndClose());

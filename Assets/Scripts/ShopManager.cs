@@ -1,19 +1,29 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections; // Needed for the timer
 
 public class ShopManager : MonoBehaviour
 {
-    [Header("UI References")]
+    // --- NEW SLOTS START HERE ---
+    [Header("UI Groups (Drag Objects Here)")]
+    public GameObject shopMainView;        // Drag 'Shop_Main_View' container here
+    public GameObject purchasePopup;       // Drag 'PurchasePopup' panel here
+    public TextMeshProUGUI warningText;    // Drag 'Text_Warning' here
+    // ---------------------------
+
+    [Header("Popup References")]
+    public Image popupImage;               // Drag the Image inside the popup
+    public TextMeshProUGUI itemNameText;   // Drag the Text inside the popup
+    public Button equipButton;             // Drag the Button inside the popup
+    public TextMeshProUGUI equipButtonText;// Drag the Text inside that button
+
+    [Header("Main UI")]
     public TextMeshProUGUI scoreText;      
-    public GameObject purchasePopup;       
-    public Image popupImage;               
-    public TextMeshProUGUI itemNameText;   // NEW: The text that shows the item name
-    public Button equipButton;             
-    public TextMeshProUGUI equipButtonText;
 
     [Header("Game Objects")]
-    public GameObject petObject;           
+    public GameObject petObject;           // Drag CyberPet here
+    // We don't use this for the wallpaper anymore, but I left it so your inspector doesn't break
     public Image pcScreenImage;            
 
     [Header("Shop Items")]
@@ -21,13 +31,17 @@ public class ShopManager : MonoBehaviour
 
     private int currentItemIndex;          
 
-    void Start()
+    void OnEnable()
     {
         UpdateScoreUI();
+        
+        // Reset the views when game starts so only the Shop is visible
+        if (shopMainView != null) shopMainView.SetActive(true);
         if (purchasePopup != null) purchasePopup.SetActive(false);
+        if (warningText != null) warningText.gameObject.SetActive(false);
     }
 
-    // --- TRIGGER: BUY BUTTON (On the Plank) ---
+    // --- BUTTON: BUY ITEM ---
     public void BuySpecificItem(int index)
     {
         if (index < 0 || index >= items.Length) return;
@@ -35,37 +49,61 @@ public class ShopManager : MonoBehaviour
 
         if (!item.isOwned)
         {
+            // Try to spend money
             if (SaveManager.TrySpendCoins(item.price))
             {
+                // SUCCESS: Mark owned, update score
                 item.isOwned = true;
                 UpdateScoreUI();
+                
+                // Switch Views: Hide Main Shop, Show Popup
                 OpenEquipPopup(index); 
+                if (shopMainView != null) shopMainView.SetActive(false);
             }
-            else Debug.Log("Not enough money!");
+            else
+            {
+                // FAIL: Show Warning
+                StartCoroutine(ShowWarning());
+            }
         }
         else
         {
+            // ALREADY OWNED: Just switch views
             OpenEquipPopup(index);
+            if (shopMainView != null) shopMainView.SetActive(false);
         }
     }
 
-    // --- ACTION: OPEN POPUP ---
+    // --- HELPER: FLASH WARNING TEXT ---
+    IEnumerator ShowWarning()
+    {
+        if (warningText != null)
+        {
+            warningText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(1.5f); // Wait 1.5 seconds
+            warningText.gameObject.SetActive(false);
+        }
+        else
+        {
+            Debug.Log("Warning Text slot is empty!");
+        }
+    }
+
+    // --- HELPER: SETUP POPUP ---
     void OpenEquipPopup(int index)
     {
         currentItemIndex = index;
         ShopItem item = items[index];
 
-        // 1. Show the Name
+        // Set Text and Image
         if (itemNameText != null) itemNameText.text = item.itemName;
-
-        // 2. Show the Image
         if (popupImage != null)
         {
             popupImage.sprite = item.icon;
             popupImage.preserveAspect = true; 
         }
 
-        // 3. Update Button
+        // Set Button State
         if (item.isEquipped)
         {
             equipButtonText.text = "Equipped";
@@ -80,7 +118,7 @@ public class ShopManager : MonoBehaviour
         purchasePopup.SetActive(true);
     }
 
-    // --- TRIGGER: EQUIP BUTTON ---
+    // --- BUTTON: EQUIP ITEM (THIS IS FIXED) ---
     public void OnEquipButtonClicked()
     {
         ShopItem item = items[currentItemIndex];
@@ -93,30 +131,47 @@ public class ShopManager : MonoBehaviour
         }
         else if (currentItemIndex == 1) // PC WALLPAPER
         {
-            if (pcScreenImage != null) pcScreenImage.sprite = item.icon;
-            PlayerPrefs.SetInt("WallpaperID", currentItemIndex);
+            // 1. Save the receipt (Remember that we own it)
+            PlayerPrefs.SetInt("WallpaperID", 1);
+            PlayerPrefs.Save();
+
+            // 2. LIVE UPDATE: Find the computer and force it to update NOW
+            // This finds the OSManager script in your scene and runs the update function
+            OSManager computer = FindObjectOfType<OSManager>();
+            if (computer != null)
+            {
+                computer.CheckAndSetWallpaper(); 
+            }
         }
 
         PlayerPrefs.Save();
+        
+        // Update Button Visuals
         equipButtonText.text = "Equipped";
         equipButton.interactable = false; 
     }
 
+   // --- BUTTON: CLOSE POPUP ---
     public void ClosePopup()
     {
-        purchasePopup.SetActive(false);
+        // 1. Hide the popup (Optional, but good for safety)
+        if (purchasePopup != null) purchasePopup.SetActive(false);
+
+        // 2. IMPORTANT: Turn off the ENTIRE Shop Object
+        // This makes sure 'OnEnable' runs the next time you open it.
+        gameObject.SetActive(false); 
     }
 
     void UpdateScoreUI()
     {
-        if (scoreText != null) scoreText.text = "Score: " + SaveManager.GetCoins();
+        if (scoreText != null) scoreText.text = "Credits: " + SaveManager.GetCoins();
     }
 }
 
 [System.Serializable]
 public class ShopItem
 {
-    public string itemName; // Make sure this is filled out in the Inspector!
+    public string itemName;
     public int price;
     public Sprite icon; 
     public bool isOwned;
