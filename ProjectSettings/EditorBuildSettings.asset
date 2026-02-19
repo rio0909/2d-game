@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 5e0ea29f325c2be4281d8d0e1decd831
+  - enabled: 1
+    path: Assets/minigame_chess/ChessAI-Unity-2D-main/Assets/Scenes/Chess.unity
+    guid: 62c5940117907de43becfd2505b9c2d4
+  - enabled: 1
+    path: Assets/minigame_Traffic Racer/2D-Traffic-Racer-main/Assets/TrafficRacer/GameScene.unity
+    guid: cadb491b0df46f645ad52326bb4ecbb3
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
