@@ -74,12 +74,12 @@ public class OSManager : MonoBehaviour
         CloseComputer();
     }
 
-    void CloseComputer()
+   void CloseComputer()
     {
-        // Hide the Shutdown Screen
+        // 1. Hide the Shutdown Screen
         if(shutdownScreen != null) shutdownScreen.SetActive(false);
 
-        // FIND THE TRANSITION SCRIPT
+        // 2. FIND THE TRANSITION SCRIPT
         SceneTransition transition = FindObjectOfType<SceneTransition>();
         
         if (transition != null)
@@ -94,5 +94,14 @@ public class OSManager : MonoBehaviour
             if (player != null) player.SetActive(true);
             Debug.LogWarning("SceneTransition script not found! Using manual backup.");
         }
+
+        // >>> NEW CODE: SHOW THE BADGES NOW <<<
+        // Now that the PC is off and we are back in the room, show the rewards!
+        BadgeManager bm = FindObjectOfType<BadgeManager>();
+        if (bm != null)
+        {
+            bm.ShowPendingBadges();
+        }
+        // >>> END NEW CODE <<<
     }
 }

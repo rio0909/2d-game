@@ -11,11 +11,18 @@ public class QuizManager : MonoBehaviour
     public TextMeshProUGUI levelText;   
     public TextMeshProUGUI[] answerButtonTexts; 
     public GameObject[] answerButtons;           
-    public GameObject[] livesIcons;             
+    public GameObject[] livesIcons;    
+
+    [Header("Timer Settings")]
+    public TextMeshProUGUI timerText;    // Drag 'Txt_Timer' (the numbers) here
+    public GameObject timerLabelObject;  // <--- NEW: Drag 'Text_TIME' (the word) here
+    public float timePerQuestion = 15f;  
+    public float timeLevel3 = 10f;       
+    private float currentTimer;     
 
     [Header("Level Settings")]
-    public GameObject levelCompletePanel;    // Linked to Panel_LevelComplete
-    public GameObject level2CompletePanel;   // Linked to Panel_Level2Complete
+    public GameObject levelCompletePanel;    
+    public GameObject level2CompletePanel;   
     public int questionsPerLevel = 5;           
 
     [Header("Video Screens")]
@@ -51,7 +58,6 @@ public class QuizManager : MonoBehaviour
 
     void Awake()
     {
-        // 1. Snapshot the EXACT positions of the buttons before the game starts
         initialPositions = new Vector2[answerButtons.Length];
         for (int i = 0; i < answerButtons.Length; i++)
         {
@@ -64,68 +70,99 @@ public class QuizManager : MonoBehaviour
         RestartQuiz();
     }
 
+    void Update()
+    {
+        // 1. Only run if game is active AND we are on Level 2 or higher
+        if (isQuizActive && currentLevel >= 2)
+        {
+            currentTimer -= Time.deltaTime; // Count down
+
+            // 2. SHOW THE TIMER & LABEL
+            if (timerText != null)
+            {
+                timerText.gameObject.SetActive(true);
+                timerText.text = Mathf.CeilToInt(currentTimer).ToString();
+                
+                // Turn RED if under 5 seconds
+                if (currentTimer <= 5) timerText.color = Color.red;
+                else timerText.color = Color.white;
+            }
+
+            // --- NEW: Also show the "TIME" label ---
+            if (timerLabelObject != null)
+            {
+                timerLabelObject.SetActive(true);
+            }
+            // ---------------------------------------
+
+            // 3. TIME RAN OUT -> INSTANT GAME OVER
+            if (currentTimer <= 0)
+            {
+                Debug.Log("Time's Up! Game Over.");
+                
+                isQuizActive = false; 
+
+                if (loseVideo != null) { loseVideo.gameObject.SetActive(true); loseVideo.Play(); }
+
+                // Hide timer and label
+                if (timerText != null) timerText.gameObject.SetActive(false);
+                if (timerLabelObject != null) timerLabelObject.SetActive(false);
+            }
+        }
+        else
+        {
+            // --- HIDE EVERYTHING IN LEVEL 1 ---
+            if (timerText != null) timerText.gameObject.SetActive(false);
+            if (timerLabelObject != null) timerLabelObject.SetActive(false);
+        }
+    }
+
     public void RestartQuiz()
     {
         isQuizActive = true;
         currentLives = maxLives;
-        currentScore = 0;              // Reset Score
+        currentScore = 0;              
         currentQuestionIndex = 0;
-        currentLevel = 1;              // Reset Level
+        currentLevel = 1;              
         
-        // Hide Screens
         if(winVideo != null) { winVideo.Stop(); winVideo.gameObject.SetActive(false); }
         if(loseVideo != null) { loseVideo.Stop(); loseVideo.gameObject.SetActive(false); }
         if(levelCompletePanel != null) levelCompletePanel.SetActive(false);
-        if(level2CompletePanel != null) level2CompletePanel.SetActive(false); // <--- ADD THIS
+        if(level2CompletePanel != null) level2CompletePanel.SetActive(false);
 
         ResetLevel1Layout();
         UpdateUI();
         LoadQuestion();
     }
 
-    void UpdateUI()
-    {
-        if(scoreText != null) scoreText.text = "= " + currentScore;
-        if(levelText != null) levelText.text = "LEVEL: " + currentLevel;
-        
-        for (int i = 0; i < livesIcons.Length; i++)
-        {
-            if (livesIcons[i] != null) livesIcons[i].SetActive(i < currentLives);
-        }
-    }
-
     void LoadQuestion()
     {
         if (currentQuestionIndex < allQuestions.Length)
         {
-            // --- LAYOUT MANAGER ---
-            if (currentQuestionIndex < 5) // Questions 1-5: True/False
+            ResetTimer();
+
+            if (currentQuestionIndex < 5) 
             {
                 SetupLevel2Layout();
                 blankInput.gameObject.SetActive(false);
                 submitBlankButton.SetActive(false);
             }
-            else if (currentQuestionIndex < 10) // Questions 6-10: Multiple Choice
+            else if (currentQuestionIndex < 10) 
             {
                 ResetLevel1Layout();
                 blankInput.gameObject.SetActive(false);
                 submitBlankButton.SetActive(false);
             }
-            else // Questions 11+: Fill in the Blanks
+            else 
             {
-                // Hide ALL multiple choice buttons
                 foreach(GameObject btn in answerButtons) btn.SetActive(false);
-                
-                // Show Typing UI
                 blankInput.gameObject.SetActive(true);
                 submitBlankButton.SetActive(true);
-                blankInput.text = ""; // Clear the box for the new question
+                blankInput.text = ""; 
             }
 
-            // Display the text
             questionText.text = allQuestions[currentQuestionIndex].questionText;
             
-            // Only update buttons if we are NOT in Level 3
             if (currentQuestionIndex < 10)
             {
                 for (int i = 0; i < answerButtonTexts.Length; i++)
@@ -146,39 +183,35 @@ public class QuizManager : MonoBehaviour
     {
         if (!isQuizActive) return;
 
-        // --- THIS WAS THE MISSING LINE causing the error ---
-        int correctID = allQuestions[currentQuestionIndex].correctAnswerID; 
-        // --------------------------------------------------
+        ResetTimer();
+
+        int correctID = allQuestions[currentQuestionIndex].correctAnswerID;
 
         if (buttonID == correctID)
         {
             Debug.Log("Correct!");
 
-            // --- SAVE SYSTEM ---
             int pointsEarned = 100;
-            currentScore += pointsEarned;      
-            SaveManager.AddCoins(pointsEarned); 
-            // -------------------
+            currentScore += pointsEarned;
+            SaveManager.AddCoins(pointsEarned);
 
-            currentQuestionIndex++; 
+            currentQuestionIndex++;
 
-            // Check for Win
             if (currentQuestionIndex >= allQuestions.Length)
             {
                 isQuizActive = false;
-                if(levelCompletePanel != null) levelCompletePanel.SetActive(false);
-                if(level2CompletePanel != null) level2CompletePanel.SetActive(false); 
-                if(winVideo != null) { winVideo.gameObject.SetActive(true); winVideo.Play(); }
+                CheckAndQueueBadges();
+                if (levelCompletePanel != null) levelCompletePanel.SetActive(false);
+                if (level2CompletePanel != null) level2CompletePanel.SetActive(false);
+                if (winVideo != null) { winVideo.gameObject.SetActive(true); winVideo.Play(); }
             }
-            // Check for Level 1 Complete
             else if (currentQuestionIndex == 5)
             {
-                if(levelCompletePanel != null) levelCompletePanel.SetActive(true);
+                if (levelCompletePanel != null) levelCompletePanel.SetActive(true);
             }
-            // Check for Level 2 Complete
             else if (currentQuestionIndex == 10)
             {
-                if(level2CompletePanel != null) level2CompletePanel.SetActive(true);
+                if (level2CompletePanel != null) level2CompletePanel.SetActive(true);
             }
             else
             {
@@ -194,14 +227,10 @@ public class QuizManager : MonoBehaviour
             if (currentLives <= 0)
             {
                 isQuizActive = false;
-                if(loseVideo != null) 
-                {
-                    loseVideo.gameObject.SetActive(true);
-                    loseVideo.Play();
-                }
+                if (loseVideo != null) { loseVideo.gameObject.SetActive(true); loseVideo.Play(); }
             }
         }
-        UpdateUI(); 
+        UpdateUI();
     }
 
     void OpenLevelComplete()
@@ -209,25 +238,21 @@ public class QuizManager : MonoBehaviour
         if(levelCompletePanel != null) levelCompletePanel.SetActive(true);
     }
 
-   public void NextLevelButton()
+    public void NextLevelButton()
     {
-        // Hide both panels
         if(levelCompletePanel != null) levelCompletePanel.SetActive(false);
         if(level2CompletePanel != null) level2CompletePanel.SetActive(false);
         
         currentLevel++; 
-        UpdateUI();     
-        LoadQuestion();      
+        UpdateUI();     
+        LoadQuestion();      
     }
 
     void ResetLevel1Layout()
     {
         for (int i = 0; i < answerButtons.Length; i++)
         {
-            // Turn the button on
             answerButtons[i].SetActive(true);
-
-            // Move it back to the snapshot position we saved in Awake()
             if (initialPositions != null && i < initialPositions.Length)
             {
                 answerButtons[i].GetComponent<RectTransform>().anchoredPosition = initialPositions[i];
@@ -237,11 +262,8 @@ public class QuizManager : MonoBehaviour
 
     void SetupLevel2Layout()
     {
-        // 1. Hide buttons C and D
         answerButtons[2].SetActive(false);
         answerButtons[3].SetActive(false);
-
-        // 2. Move A and B to the exact X and Y you type in the Inspector
         answerButtons[0].GetComponent<RectTransform>().anchoredPosition = trueButtonPos;
         answerButtons[1].GetComponent<RectTransform>().anchoredPosition = falseButtonPos;
     }
@@ -250,26 +272,24 @@ public class QuizManager : MonoBehaviour
     {
         if (!isQuizActive) return;
 
-        // --- THESE ARE THE MISSING LINES ---
-        // We need to define these variables before we can use them!
+        ResetTimer();
+
         string userTyped = blankInput.text.Trim().ToLower();
         string correctAnswer = allQuestions[currentQuestionIndex].answers[0].Trim().ToLower();
-        // -----------------------------------
 
         if (userTyped == correctAnswer)
         {
-            // --- SAVE SYSTEM ---
             int pointsEarned = 150;
-            currentScore += pointsEarned;      
-            SaveManager.AddCoins(pointsEarned); 
-            // -------------------
+            currentScore += pointsEarned;
+            SaveManager.AddCoins(pointsEarned);
 
             currentQuestionIndex++;
-            
+
             if (currentQuestionIndex >= allQuestions.Length)
             {
                 isQuizActive = false;
-                if(winVideo != null) { winVideo.gameObject.SetActive(true); winVideo.Play(); }
+                CheckAndQueueBadges();
+                if (winVideo != null) { winVideo.gameObject.SetActive(true); winVideo.Play(); }
             }
             else
             {
@@ -278,15 +298,50 @@ public class QuizManager : MonoBehaviour
         }
         else
         {
-            Debug.Log("Wrong!"); // Optional: Log for debugging
+            Debug.Log("Wrong!"); 
             currentLives--;
             UpdateUI();
             if (currentLives <= 0)
             {
                 isQuizActive = false;
-                if(loseVideo != null) { loseVideo.gameObject.SetActive(true); loseVideo.Play(); }
+                if (loseVideo != null) { loseVideo.gameObject.SetActive(true); loseVideo.Play(); }
             }
         }
         UpdateUI();
+    }
+    
+    void CheckAndQueueBadges()
+    {
+        BadgeManager bm = FindObjectOfType<BadgeManager>();
+        if (bm == null) return;
+
+        bm.UnlockBadge("QUIZ_COMPLETE");
+
+        if (currentLives == maxLives)
+        {
+            bm.UnlockBadge("QUIZ_PERFECT");
+        }
+
+        if (currentLives == 1)
+        {
+            bm.UnlockBadge("QUIZ_SURVIVOR");
+        }
+    }
+
+    void ResetTimer()
+    {
+        if (currentLevel == 3) currentTimer = timeLevel3;
+        else currentTimer = timePerQuestion;
+    }
+
+    void UpdateUI()
+    {
+        if(scoreText != null) scoreText.text = "= " + currentScore;
+        if(levelText != null) levelText.text = "LEVEL: " + currentLevel;
+        
+        for (int i = 0; i < livesIcons.Length; i++)
+        {
+            if (livesIcons[i] != null) livesIcons[i].SetActive(i < currentLives);
+        }
     }
 }
