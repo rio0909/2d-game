@@ -7,6 +7,9 @@ public class MiniGameLoader : MonoBehaviour
     [Header("Mini-Game Scene Names")]
     public string chessSceneName = "ChessScene";   
     public string racingSceneName = "RacingScene"; 
+    // --- ADDED: The name of your new Target game scene ---
+    public string targetSceneName = "TargetScene"; 
+    // -----------------------------------------------------
 
     [Header("Main Game References")]
     public GameObject playerCamera; 
@@ -48,6 +51,16 @@ public class MiniGameLoader : MonoBehaviour
             StartCoroutine(LoadMiniGameAsync(racingSceneName));
         }
     }
+
+    // --- ADDED: The launch function for your new game! ---
+    public void LaunchTargetGame()
+    {
+        if (!isMiniGamePlaying)
+        {
+            StartCoroutine(LoadMiniGameAsync(targetSceneName));
+        }
+    }
+    // -----------------------------------------------------
 
     // --- CORE LOADING LOGIC ---
 

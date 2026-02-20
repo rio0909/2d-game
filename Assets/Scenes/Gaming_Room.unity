@@ -313,7 +313,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: aim trainer
+  m_text: Pixel Archer
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a0fd172d3ec0f84ba374e24751536b4, type: 2}
   m_sharedMaterial: {fileID: 9178578325592233804, guid: 8a0fd172d3ec0f84ba374e24751536b4, type: 2}
@@ -1561,6 +1561,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MiniGameLoader
   chessSceneName: Chess
   racingSceneName: GameScene
+  targetSceneName: BowAndArrowScene
   playerCamera: {fileID: 898067699}
   computerUI: {fileID: 2017407958}
   roomEnvironment: {fileID: 1520078604}
@@ -1784,6 +1785,7 @@ GameObject:
   - component: {fileID: 351899302}
   - component: {fileID: 351899304}
   - component: {fileID: 351899303}
+  - component: {fileID: 351899305}
   m_Layer: 5
   m_Name: aim_trainer
   m_TagString: Untagged
@@ -1808,8 +1810,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 19.552063, y: 161.66063}
-  m_SizeDelta: {x: -490.9041, y: 118.1218}
+  m_AnchoredPosition: {x: -0.0000014305115, y: 154.75699}
+  m_SizeDelta: {x: -493.5379, y: 114.2701}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &351899303
 MonoBehaviour:
@@ -1831,7 +1833,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -4263266926374193780, guid: 6d79a2fb3994ecf4aa97d3b75ffbe135, type: 3}
+  m_Sprite: {fileID: 1146225009658771521, guid: 122ecb655444f844ebee05b4fc4765e2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1849,6 +1851,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 351899301}
   m_CullTransparentMesh: 1
+--- !u!114 &351899305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 351899301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 351899303}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 327428822}
+        m_TargetAssemblyTypeName: MiniGameLoader, Assembly-CSharp
+        m_MethodName: LaunchTargetGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &394303150
 GameObject:
   m_ObjectHideFlags: 0
@@ -9352,8 +9410,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 22.029663, y: 283.2094}
-  m_SizeDelta: {x: -462.0644, y: 83.5436}
+  m_AnchoredPosition: {x: 2.989441, y: 273.32324}
+  m_SizeDelta: {x: -469.0878, y: 84.8275}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1615442658
 MonoBehaviour:

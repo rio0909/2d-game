@@ -23,6 +23,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/minigame_Traffic Racer/2D-Traffic-Racer-main/Assets/TrafficRacer/GameScene.unity
     guid: cadb491b0df46f645ad52326bb4ecbb3
+  - enabled: 1
+    path: Assets/minigame_bow-and-arrow/Bow-And-Arrow-2D-Game-main/Assets/Scenes/BowAndArrowScene.unity
+    guid: 6a26fe4e153352640b88b8e7717eee35
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
