@@ -1,8 +1,8 @@
 ﻿/***********************************************************************************************************
- * Produced by Madfireon:               https://www.madfireongames.com/									   *
- * Facebook:                            https://www.facebook.com/madfireon/								   *
- * Contact us:                          https://www.madfireongames.com/contact							   *
- * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw											   *
+ * Produced by Madfireon:               https://www.madfireongames.com/                                    *
+ * Facebook:                            https://www.facebook.com/madfireon/                                *
+ * Contact us:                          https://www.madfireongames.com/contact                             *
+ * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw                                             *
  * Developed by Swapnil Rane:           https://in.linkedin.com/in/swapnilrane24                           *
  ***********************************************************************************************************/
 
@@ -23,12 +23,13 @@ public class ObjectPooling : MonoBehaviour {
     private List<GameObject> pickUpPooledObjects;
 
     // Use this for initialization
-	void Awake()
+    void Awake()
     {
-        if (instance == null) instance = this;
+        // --- FIX: FORCE THE NEW POOLER TO BE THE BOSS ---
+        instance = this;
 
         carPooledObjects = new List<GameObject>();                      //set it empty at start
-        gameFX = new List<GameObject>();                           //set it empty at start	
+        gameFX = new List<GameObject>();                           //set it empty at start  
         pickUpPooledObjects = new List<GameObject>();
 
         //car pooled object
@@ -159,27 +160,6 @@ public class ObjectPooling : MonoBehaviour {
         if (pickUpFX.GetComponent<MoveObject>() != null)
             pickUpFX.GetComponent<MoveObject>().speed = speed;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     [System.Serializable]
     public struct ObjectPoolItems                               //struct from storing pool item details

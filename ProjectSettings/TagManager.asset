@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 3
   tags:
   - player
+  - Fuel
+  - Enemy
+  - PickUp
   layers:
   - Default
   - TransparentFX

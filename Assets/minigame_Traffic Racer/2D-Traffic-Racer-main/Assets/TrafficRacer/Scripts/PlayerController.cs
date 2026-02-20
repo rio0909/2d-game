@@ -1,8 +1,8 @@
 ﻿/***********************************************************************************************************
- * Produced by Madfireon:               https://www.madfireongames.com/									   *
- * Facebook:                            https://www.facebook.com/madfireon/								   *
- * Contact us:                          https://www.madfireongames.com/contact							   *
- * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw											   *
+ * Produced by Madfireon:               https://www.madfireongames.com/                                    *
+ * Facebook:                            https://www.facebook.com/madfireon/                                *
+ * Contact us:                          https://www.madfireongames.com/contact                             *
+ * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw                                             *
  * Developed by Swapnil Rane:           https://in.linkedin.com/in/swapnilrane24                           *
  ***********************************************************************************************************/
 
@@ -13,7 +13,6 @@
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.EventSystems;
-using DG.Tweening;
 
 public class PlayerController : MonoBehaviour {
 
@@ -39,16 +38,24 @@ public class PlayerController : MonoBehaviour {
     // Use this for initialization
     void Awake ()
     {
-        if (instance == null) instance = this;
-	}
+        // --- FIX 1: FORCE THE NEW CAR TO BE THE BOSS ---
+        instance = this; 
+    }
+
+    // --- FIX 2: FORCE RESET HITBOXES ON REPLAY ---
+    void Start()
+    {
+        GetComponent<Collider2D>().enabled = true; 
+        invinsible = false;
+    }
 
     public void SetCarSprite()
     {
         spriteRenderer.sprite = sprites[TrafficGameManager.instance.selectedCar];          //set the car sprite, depending on selected car
     }
-	
-	// Update is called once per frame
-	void Update ()
+    
+    // Update is called once per frame
+    void Update ()
     {                                                                               //if gameover is true or game started is false , return
         if (TrafficGameManager.instance.gameOver == true || TrafficGameManager.instance.gameStarted == false) return;
 
@@ -223,13 +230,13 @@ public class PlayerController : MonoBehaviour {
             PickUpType pickUpType = pickUps._PickUpType;                            //check pickup type
             switch (pickUpType)
             {   
-                case PickUpType.coin1:                                                          //if its coin1  
+                case PickUpType.coin1:                                                  //if its coin1  
                     ObjectPooling.instance.SpawnPickUpFX("CoinPickUpFX", transform.position);   //spawn coin effect
                     SoundManager.instance.CarFX("Coin");                                        //play coin sound
                     other.GetComponent<PickUps>().PickedUp = true;                              //coin is picked up
                     GuiManager.instance.IncreaseCoin(1,other.gameObject);                       //increase coins
                     break;  
-                case PickUpType.coin5:                                                          //if its coin5 
+                case PickUpType.coin5:                                                  //if its coin5 
                     ObjectPooling.instance.SpawnPickUpFX("CoinPickUpFX", transform.position);
                     SoundManager.instance.CarFX("Coin");
                     other.GetComponent<PickUps>().PickedUp = true;
@@ -241,7 +248,7 @@ public class PlayerController : MonoBehaviour {
                     other.GetComponent<PickUps>().PickedUp = true;
                     GuiManager.instance.IncreaseCoin(10, other.gameObject);
                     break;
-                case PickUpType.shield:                                                         //if its shield powerup
+                case PickUpType.shield:                                                 //if its shield powerup
                     SoundManager.instance.PlayNarrationFX("ShieldActive");                      //play shield sound
                     GuiManager.instance.ShieldActive = true;                                    //set shieldActive to true
                     shield.transform.DOScale(5f, 0f);                                           //set the shield scale to 5
@@ -252,14 +259,14 @@ public class PlayerController : MonoBehaviour {
                     GuiManager.instance.PickUpPop("Shield Activated");                          //play popup of shield is activated
                     other.gameObject.SetActive(false);                                          //deactivate gameobject
                     break;
-                case PickUpType.doubleCoin:                                                     //if its doubleCoin powerup
+                case PickUpType.doubleCoin:                                             //if its doubleCoin powerup
                     SoundManager.instance.CarFX("Coin");
                     GuiManager.instance.ActivateDoubleCoin();                                   //double coin activated
                     GuiManager.instance.PickUpPop("Double Coin Activated");                     //play popup of doubleCoin is activated
                     other.gameObject.SetActive(false);                                          //deactivate gameobject
                     GuiManager.instance.DoubleCoinSpawned = false;                              //set to false
                     break;
-                case PickUpType.magnet:                                                         //if its magnet powerup
+                case PickUpType.magnet:                                                 //if its magnet powerup
                     magnetEffect.SetActive(true);                                               //activate magnet effect
                     SoundManager.instance.CarFX("MagnetPickUpFx");                              //play sound effect
                     GuiManager.instance.ActivateMagnet();                                       //magnet activated
@@ -267,7 +274,7 @@ public class PlayerController : MonoBehaviour {
                     other.gameObject.SetActive(false);                                          //deactivate gameobject
                     GuiManager.instance.MagnetSpawned = false;                                  //set to false
                     break;
-                case PickUpType.turboBoost:                                                     //if its turboBoost powerup
+                case PickUpType.turboBoost:                                             //if its turboBoost powerup
                     invinsible = true;
                     SoundManager.instance.PlayNarrationFX("TurboOn");                           //play sound effect
                     smokeEffect.SetActive(false);                                               //deactivate smoke effect

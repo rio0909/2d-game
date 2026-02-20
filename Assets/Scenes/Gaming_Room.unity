@@ -290,7 +290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 52.3, y: -82}
+  m_AnchoredPosition: {x: 52.3, y: -85.851616}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &26877201
@@ -313,7 +313,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: aim_trainer
+  m_text: aim trainer
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8a0fd172d3ec0f84ba374e24751536b4, type: 2}
   m_sharedMaterial: {fileID: 9178578325592233804, guid: 8a0fd172d3ec0f84ba374e24751536b4, type: 2}
@@ -340,13 +340,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18.4
-  m_fontSizeBase: 14.4
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -379,7 +379,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 101.10379, w: 28.369759}
+  m_margin: {x: 0, y: 0, z: 93.27508, w: 14.21025}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1085,11 +1085,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 0.9048506, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 970147244}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -6.11, y: 2.48}
+  m_AnchoredPosition: {x: -596.86, y: -257.145}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &191210298
@@ -1530,6 +1530,57 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 314717096}
   m_CullTransparentMesh: 1
+--- !u!1 &327428821
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 327428823}
+  - component: {fileID: 327428822}
+  m_Layer: 0
+  m_Name: MiniGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &327428822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327428821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c49fa5e54924e6447a0cad610ab07c41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MiniGameLoader
+  chessSceneName: Chess
+  racingSceneName: GameScene
+  playerCamera: {fileID: 898067699}
+  computerUI: {fileID: 2017407958}
+  roomEnvironment: {fileID: 1520078604}
+  shopIcon: {fileID: 1435712687}
+  closeGameButton: {fileID: 1666548395}
+--- !u!4 &327428823
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 327428821}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.38617, y: 2.44874, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330014400
 GameObject:
   m_ObjectHideFlags: 0
@@ -1757,8 +1808,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -45, y: 269}
-  m_SizeDelta: {x: -514.6082, y: 101.4315}
+  m_AnchoredPosition: {x: 19.552063, y: 161.66063}
+  m_SizeDelta: {x: -490.9041, y: 118.1218}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &351899303
 MonoBehaviour:
@@ -3703,7 +3754,6 @@ GameObject:
   - component: {fileID: 685753720}
   - component: {fileID: 685753719}
   - component: {fileID: 685753721}
-  - component: {fileID: 685753722}
   m_Layer: 5
   m_Name: Desktop_PanelScreen
   m_TagString: Untagged
@@ -3790,25 +3840,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &685753722
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685753717}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c49fa5e54924e6447a0cad610ab07c41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MiniGameLoader
-  chessSceneName: Chess
-  racingSceneName: GameScene
-  playerCamera: {fileID: 898067699}
-  computerUI: {fileID: 2017407958}
-  roomEnvironment: {fileID: 1520078604}
-  shopIcon: {fileID: 1435712687}
-  closeGameButton: {fileID: 1666548395}
 --- !u!1 &739502854
 GameObject:
   m_ObjectHideFlags: 0
@@ -5138,13 +5169,14 @@ RectTransform:
   - {fileID: 1478080481}
   - {fileID: 2017407959}
   - {fileID: 591356685}
+  - {fileID: 1666548396}
   - {fileID: 1850193387}
   - {fileID: 1917192352}
   - {fileID: 1435712688}
   - {fileID: 1543478050}
   - {fileID: 2116159379}
   - {fileID: 532824833}
-  - {fileID: 1666548396}
+  - {fileID: 160253699}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -9295,6 +9327,7 @@ GameObject:
   - component: {fileID: 1615442657}
   - component: {fileID: 1615442659}
   - component: {fileID: 1615442658}
+  - component: {fileID: 1615442660}
   m_Layer: 5
   m_Name: Traffic Racer
   m_TagString: Untagged
@@ -9319,8 +9352,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -43, y: 158.00534}
-  m_SizeDelta: {x: -542.0085, y: 133.592}
+  m_AnchoredPosition: {x: 22.029663, y: 283.2094}
+  m_SizeDelta: {x: -462.0644, y: 83.5436}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1615442658
 MonoBehaviour:
@@ -9342,7 +9375,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 2263909851741335231, guid: 015dc38fdfabba841a9bf13c0fafb282, type: 3}
+  m_Sprite: {fileID: -7524506188583454001, guid: 114c6e1b3fe595a4692159e191f621eb, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -9360,6 +9393,62 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1615442656}
   m_CullTransparentMesh: 1
+--- !u!114 &1615442660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1615442656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_Colors:
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
+    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_ColorMultiplier: 1
+    m_FadeDuration: 0.1
+  m_SpriteState:
+    m_HighlightedSprite: {fileID: 0}
+    m_PressedSprite: {fileID: 0}
+    m_SelectedSprite: {fileID: 0}
+    m_DisabledSprite: {fileID: 0}
+  m_AnimationTriggers:
+    m_NormalTrigger: Normal
+    m_HighlightedTrigger: Highlighted
+    m_PressedTrigger: Pressed
+    m_SelectedTrigger: Selected
+    m_DisabledTrigger: Disabled
+  m_Interactable: 1
+  m_TargetGraphic: {fileID: 1615442658}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 327428822}
+        m_TargetAssemblyTypeName: MiniGameLoader, Assembly-CSharp
+        m_MethodName: LaunchTrafficRacer
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1666548395
 GameObject:
   m_ObjectHideFlags: 0
@@ -9386,7 +9475,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1666548395}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9395,8 +9484,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -838, y: 313}
-  m_SizeDelta: {x: 61.455017, y: 55.84781}
+  m_AnchoredPosition: {x: -904.65173, y: 348.4995}
+  m_SizeDelta: {x: 67.455, y: 60.999}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1666548397
 MonoBehaviour:
@@ -9442,7 +9531,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 685753722}
+      - m_Target: {fileID: 327428822}
         m_TargetAssemblyTypeName: MiniGameLoader, Assembly-CSharp
         m_MethodName: CloseMiniGame
         m_Mode: 1
@@ -10154,7 +10243,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -447, y: -51}
+  m_AnchoredPosition: {x: -447.40002, y: -61.65439}
   m_SizeDelta: {x: 96.5313, y: 145.1204}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1793963655
@@ -10239,7 +10328,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 685753722}
+      - m_Target: {fileID: 327428822}
         m_TargetAssemblyTypeName: MiniGameLoader, Assembly-CSharp
         m_MethodName: LaunchChessGame
         m_Mode: 1
@@ -10668,8 +10757,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 52.3, y: -94}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: 40.536545, y: -71.3863}
+  m_SizeDelta: {x: 200, y: 52.3924}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1835518582
 MonoBehaviour:
@@ -10718,13 +10807,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.2
+  m_fontSize: 25.9
   m_fontSizeBase: 14.4
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 21.2
   m_fontSizeMax: 71.78
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -10757,7 +10846,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 101.10379, w: 28.369759}
+  m_margin: {x: 0, y: 0, z: 77.61773, w: 28.369757}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -11796,8 +11885,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 7, y: -110}
-  m_SizeDelta: {x: 1193.6196, y: 816.2828}
+  m_AnchoredPosition: {x: -1, y: -85.5}
+  m_SizeDelta: {x: 1183.7092, y: 804.4194}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2017407961
 CanvasRenderer:
@@ -12309,8 +12398,8 @@ SceneRoots:
   - {fileID: 426278863}
   - {fileID: 970147244}
   - {fileID: 1385133658}
-  - {fileID: 160253699}
   - {fileID: 154017706}
   - {fileID: 1113009907}
   - {fileID: 1566119407}
   - {fileID: 1520078605}
+  - {fileID: 327428823}

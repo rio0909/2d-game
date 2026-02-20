@@ -1,8 +1,8 @@
 ﻿/***********************************************************************************************************
- * Produced by Madfireon:               https://www.madfireongames.com/									   *
- * Facebook:                            https://www.facebook.com/madfireon/								   *
- * Contact us:                          https://www.madfireongames.com/contact							   *
- * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw											   *
+ * Produced by Madfireon:               https://www.madfireongames.com/                                    *
+ * Facebook:                            https://www.facebook.com/madfireon/                                *
+ * Contact us:                          https://www.madfireongames.com/contact                             *
+ * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw                                             *
  * Developed by Swapnil Rane:           https://in.linkedin.com/in/swapnilrane24                           *
  ***********************************************************************************************************/
 
@@ -36,12 +36,19 @@ public class SoundManager : MonoBehaviour
         else
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            // --- FIX: STOP THE ZOMBIE MUSIC ---
+            // DontDestroyOnLoad(gameObject); 
         }
     }
 
     private void Start()
     {
+        // --- FIX: HARDCAP ALL VOLUME AT 10% ---
+        if (musicSource != null) musicSource.volume = 0.10f;
+        if (fxSource != null) fxSource.volume = 0.10f;
+        if (narrationSource != null) narrationSource.volume = 0.10f;
+        // --------------------------------------
+
         PlayMenuMusic();
     }
 

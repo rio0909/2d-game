@@ -1,8 +1,8 @@
 ﻿/***********************************************************************************************************
- * Produced by Madfireon:               https://www.madfireongames.com/									   *
- * Facebook:                            https://www.facebook.com/madfireon/								   *
- * Contact us:                          https://www.madfireongames.com/contact							   *
- * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw											   *
+ * Produced by Madfireon:               https://www.madfireongames.com/                                    *
+ * Facebook:                            https://www.facebook.com/madfireon/                                *
+ * Contact us:                          https://www.madfireongames.com/contact                             *
+ * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw                                             *
  * Developed by Swapnil Rane:           https://in.linkedin.com/in/swapnilrane24                           *
  ***********************************************************************************************************/
 
@@ -10,12 +10,12 @@
 * NOTE:- This script controls game menu                                                                    *
 ***********************************************************************************************************/
 
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using DG.Tweening;
-//using GameAnalyticsSDK;
 
 public class GuiManager : MonoBehaviour {
 
@@ -23,37 +23,36 @@ public class GuiManager : MonoBehaviour {
 
     #region Serialized Variables
     [SerializeField] [Header("Game Menu Elements")]
-    private GameMenu gameMenu;                                                                  //reference to game menu UI elements
+    private GameMenu gameMenu;                                                                          
     [SerializeField][Header("-----------------------")][Header("Main Menu Elements")]
-    private MainMenu mainMenu;                                                                  //reference to main menu UI elements
+    private MainMenu mainMenu;                                                                          
     [SerializeField] [Header("-----------------------")] [Header("GameOver Menu Elements")]
-    private GameOverMenu gameOverMenu;                                                          //reference to game over menu UI elements
+    private GameOverMenu gameOverMenu;                                                                  
     [SerializeField] [Header("-----------------------")] [Header("Tutorial Menu Elements")]
-    private Tutorial tutorialElements;                                                          //reference to tutorial elements
+    private Tutorial tutorialElements;                                                                  
     [SerializeField] [Header("-----------------------")] [Header("Facebook Menu Elements")]
-    public FacebookPanel facebookElements;                                                      //reference to facebook elements
+    public FacebookPanel facebookElements;                                                              
     [SerializeField] [Header("-----------------------")] [Header("Speed Increaser")]
-    private SpeedIncreaser speedIncreaser;                                                      //reference to speed increasing values
+    private SpeedIncreaser speedIncreaser;                                                              
 
-    [SerializeField] [Header("-----------------------")] private GameObject mainMenuObj;        //ref to mainMenu panel
-                                                                                                //ref to other Object
+    [SerializeField] [Header("-----------------------")] private GameObject mainMenuObj;                
     [SerializeField] private GameObject gameMenuObj, gameoverMenu, reviveMenu, carShopPanel, turboEffect, powerupShop, gdprAdmobPanel;
-    [SerializeField] private ScrollTexture road;                                                //ref to ScrollTexture component on road gameobject
-    [SerializeField] private float currentSpeed;                                                //speed of game
-    [SerializeField] private Button noAdsbtn;                                                   //ref to remove ads button
+    [SerializeField] private ScrollTexture road;                                                        
+    [SerializeField] private float currentSpeed;                                                        
+    [SerializeField] private Button noAdsbtn;                                                           
     #endregion
 
     /*---------------------------------------------------Private Variables------------------------------------------------------------*/
 
     #region Private Variables
-    private float currentFuel, maxEnemyCarGap = 4;                                              //floats to store values
-    private float currentMagnetTime, currentTurboTime, currentDoubleCoinTime;                   //floats to store values
-    private float countDown = 4, distanceMultiplier, giftBarTime;                               //floats to store values
-    private bool fuelSpawned = false, startCountDown, revived = false, giftBarActive = false;   //bools
-    private bool magnetActive, turboActive, doubleCoinActive, shieldActive;                     //bools
-    private bool magnetSpawned, turboSpawned, doubleCoinSpawned, shieldSpawned;                 //bools
-    private GameObject coinObject, coinUIObj;                                                   //gameobject variable to store reference to object 
-    private int coinIncreaser = 1;                                                              //coin multipliers
+    private float currentFuel, maxEnemyCarGap = 4;                                                      
+    private float currentMagnetTime, currentTurboTime, currentDoubleCoinTime;                           
+    private float countDown = 4, distanceMultiplier, giftBarTime;                                       
+    private bool fuelSpawned = false, startCountDown, revived = false, giftBarActive = false;   
+    private bool magnetActive, turboActive, doubleCoinActive, shieldActive;                             
+    private bool magnetSpawned, turboSpawned, doubleCoinSpawned, shieldSpawned;                         
+    private GameObject coinObject, coinUIObj;                                                           
+    private int coinIncreaser = 1;                                                                      
     private int currentTipIndex = 0;
     #endregion
 
@@ -87,92 +86,90 @@ public class GuiManager : MonoBehaviour {
         if (instance == null)
             instance = this;
 
-        vars = Resources.Load<managerVars>("managerVarsContainer");         //loading data from managerVars
+        vars = Resources.Load<managerVars>("managerVarsContainer");         
     }
 
     private void Start()
     {
         tutorialElements.previousButton.SetActive(false);
 
-        //if GDPRConset is zero and canShowAds is true
         if (TrafficGameManager.instance.GDPRConset == 0 && TrafficGameManager.instance.canShowAds == true)
         {
-            gdprAdmobPanel.SetActive(true);                                                             //activate gdprAdmobPanel
+            gdprAdmobPanel.SetActive(true);                                                                 
         }
 
-        if (TrafficGameManager.instance.canShowAds == false)                                                   //if canShowAds is false
+        if (TrafficGameManager.instance.canShowAds == false)                                               
         {
-            noAdsbtn.interactable = false;                                                              //make noAdsbtn non interactable
-
-#if AdmobDef
-            AdsManager.instance.HideBannerAds();                                                        //hide banner ads
-#endif
+            noAdsbtn.interactable = false;                                                                  
         }
 
-        //sound button
-        if (TrafficGameManager.instance.isMusicOn == true)                                                     //if mousicOn is true
+        if (TrafficGameManager.instance.isMusicOn == true)                                                 
         {
-            AudioListener.volume = 1;                                                                   //set volume to 1
-            mainMenu.soundBtnImg.sprite = mainMenu.soundOff;                                            //set the soundOff icon
+            AudioListener.volume = 0.35f;                                                                       
+            mainMenu.soundBtnImg.sprite = mainMenu.soundOff;                                                
         }
         else
         {
-            AudioListener.volume = 0;                                                                   //else set volume to 0
-            mainMenu.soundBtnImg.sprite = mainMenu.soundOn;                                             //set the soundOn icon
+            AudioListener.volume = 0;                                                                       
+            mainMenu.soundBtnImg.sprite = mainMenu.soundOn;                                                 
         }
 
-        TrafficGameManager.instance.gameStarted = false;                                                       //set gameStarted to false
-        TrafficGameManager.instance.gameOver = false;                                                          //set gameOver to false
-        TrafficGameManager.instance.currentCoinsEarned = 0;                                                    //set currentCoinsEarned to 0
-        gameMenu.coinText.text = "" + TrafficGameManager.instance.currentCoinsEarned;                          //set the coinText to currentCoinsEarned
-        speedIncreaser.milestone = speedIncreaser.milestoneIncreaser;                                   //set milestone to milestoneIncreaser
-        MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);  //slide in mainMenu
-        SoundManager.instance.PlayFX("PanelSlide");                                                     //play PanelSlide sound
-        TrafficGameManager.instance.playerCar = GameObject.FindGameObjectWithTag("Player");                    //get reference to player car
-        TrafficGameManager.instance.currentDistance = 0;                                                       //set currentDistance to 0
-        gameMenu.distanceText.text = "" + TrafficGameManager.instance.currentDistance;                         //set the distance text
-        road.ScrollSpeed = currentSpeed;                                                                //set road scroll speed
-        mainMenu.coinText.text = "" + TrafficGameManager.instance.coinAmount;                                  //set cointext
-        PlayerController.instance.SetCarSprite();                                                       //set player car sprite
+        TrafficGameManager.instance.gameStarted = false;                                                       
+        TrafficGameManager.instance.gameOver = false;                                                          
+        TrafficGameManager.instance.currentCoinsEarned = 0;                                                    
+        gameMenu.coinText.text = "" + TrafficGameManager.instance.currentCoinsEarned;                          
+        speedIncreaser.milestone = speedIncreaser.milestoneIncreaser;                                   
+        MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);  
+        SoundManager.instance.PlayFX("PanelSlide");                                                     
+        TrafficGameManager.instance.playerCar = GameObject.FindGameObjectWithTag("Player");                    
+        TrafficGameManager.instance.currentDistance = 0;                                                       
+        gameMenu.distanceText.text = "" + TrafficGameManager.instance.currentDistance;                         
+        road.ScrollSpeed = currentSpeed;                                                                
+        mainMenu.coinText.text = "" + TrafficGameManager.instance.coinAmount;                                  
+        PlayerController.instance.SetCarSprite();                                                       
 
-        if (TrafficGameManager.instance.retry == true)                                                         //if retry is true
+        // --- BULLETPROOF AUTO-START CHECK ---
+        if (PlayerPrefs.GetInt("AutoStartRace", 0) == 1)                                                         
         {
-            TrafficGameManager.instance.retry = false;                                                         //set retry to false
-            PlayBtn();                                                                                  //call playBtn method
+            PlayerPrefs.SetInt("AutoStartRace", 0);                                                        
+            PlayBtn();                                                                                      
+        }
+        else if (TrafficGameManager.instance.retry == true)
+        {
+            TrafficGameManager.instance.retry = false;
+            PlayBtn();
         }
     }
 
     void Update ()
     {
-
 #if UNITY_ANDROID
-        if (Input.GetKeyDown(KeyCode.Escape))                                                           //if escape key is press
-            Application.Quit();                                                                         //quit game
+        if (Input.GetKeyDown(KeyCode.Escape))                                                               
+            Application.Quit();                                                                             
 #endif
-        //if countDown is more then 0 , startCountDown is true and gameStarted is false
         if (countDown > 0 && startCountDown == true && TrafficGameManager.instance.gameStarted == false)
         {
-            countDown -= Time.deltaTime;                                                                //reduce countDown by Time.deltaTime
-            if (countDown <= 4 && countDown > 3)                                                        //if countdown is 4
+            countDown -= Time.deltaTime;                                                                    
+            if (countDown <= 4 && countDown > 3)                                                        
             {
-                if (gameMenu.countDownText.text != "3")                                                 //check if text is not 3
-                    SoundManager.instance.PlayFX("CD3");                                                //play sound
+                if (gameMenu.countDownText.text != "3")                                                 
+                    SoundManager.instance.PlayFX("CD3");                                                
 
-                gameMenu.countDownText.text = "3";                                                      //set text to 3
+                gameMenu.countDownText.text = "3";                                                      
             }   
-            else if (countDown <= 3 && countDown > 2)                                                   //if countdown is 3
+            else if (countDown <= 3 && countDown > 2)                                                   
             {
-                if (gameMenu.countDownText.text != "2")                                                 //check if text is not 2
-                    SoundManager.instance.PlayFX("CD2");                                                //play sound
+                if (gameMenu.countDownText.text != "2")                                                 
+                    SoundManager.instance.PlayFX("CD2");                                                
 
-                gameMenu.countDownText.text = "2";                                                      //set text to 2
+                gameMenu.countDownText.text = "2";                                                      
             }
-            else if (countDown <= 2 && countDown > 1)                                                   //if countdown is 2
+            else if (countDown <= 2 && countDown > 1)                                                   
             {
-                if (gameMenu.countDownText.text != "1")                                                 //check if text is not 1
-                    SoundManager.instance.PlayFX("CD1");                                                //play sound
+                if (gameMenu.countDownText.text != "1")                                                 
+                    SoundManager.instance.PlayFX("CD1");                                                
 
-                gameMenu.countDownText.text = "1";                                                      //set text to 1
+                gameMenu.countDownText.text = "1";                                                      
             }
             else if (countDown <= 1)
             {
@@ -182,57 +179,54 @@ public class GuiManager : MonoBehaviour {
                 gameMenu.countDownText.text = "GO!!";
             }
 
-            if (countDown <= 0)                                                                         //if countdown is less than or equal to 0
+            if (countDown <= 0)                                                                         
             {   
-                SoundManager.instance.PlayNarrationFX("GO");                                            //play sound
-                startCountDown = false;                                                                 //set startCountDown to false
-                gameMenu.countDownText.gameObject.SetActive(false);                                     //deactivate countDownText 
-                TrafficGameManager.instance.gameStarted = true;                                                //gameStarted is true
-                Spawner.instance.SpawnObjects();                                                        //spawn object (enemy car or pickup)
+                SoundManager.instance.PlayNarrationFX("GO");                                            
+                startCountDown = false;                                                                 
+                gameMenu.countDownText.gameObject.SetActive(false);                                     
+                TrafficGameManager.instance.gameStarted = true;                                                
+                Spawner.instance.SpawnObjects();                                                        
             }
         }
 
-        if (TrafficGameManager.instance.gameOver == true && giftBarActive == true)                             //if game is over and gift bar is active
+        if (TrafficGameManager.instance.gameOver == true && giftBarActive == true)                             
         {
-            GiftBar();                                                                                  //call giftBar method
+            GiftBar();                                                                                  
         }
 
-        if (TrafficGameManager.instance.gameStarted == true && TrafficGameManager.instance.gameOver == false)         //if gameOver is false and gameStarted is true
+        if (TrafficGameManager.instance.gameStarted == true && TrafficGameManager.instance.gameOver == false)         
         {
-            TrafficGameManager.instance.currentDistance += Time.deltaTime * distanceMultiplier;                //increase distance
-            gameMenu.distanceText.text = "" + Mathf.RoundToInt(TrafficGameManager.instance.currentDistance);   //set distance text
+            TrafficGameManager.instance.currentDistance += Time.deltaTime * distanceMultiplier;                
+            gameMenu.distanceText.text = "" + Mathf.RoundToInt(TrafficGameManager.instance.currentDistance);   
 
-            if (currentFuel > 0)                                                                        //if currentFuel is moe than zero
+            if (currentFuel > 0)                                                                        
             {
-                currentFuel -= Time.deltaTime;                                                          //reduce it with time
+                currentFuel -= Time.deltaTime;                                                          
             }
 
-            if (currentFuel <= 0 && TrafficGameManager.instance.gameOver == false)                             //if currentFuel is less than 0 and gameOver is false
+            if (currentFuel <= 0 && TrafficGameManager.instance.gameOver == false)                             
             {
-                SoundManager.instance.PlayNarrationFX("GameOver");                                      //play sound
-                TrafficGameManager.instance.gameOver = true;                                                   //gameOver is set to true
-                GameOverMethod();                                                                       //call GameOverMethod
+                SoundManager.instance.PlayNarrationFX("GameOver");                                      
+                TrafficGameManager.instance.gameOver = true;                                                   
+                GameOverMethod();                                                                       
             }
 
-            gameMenu.fuelSlider.value = currentFuel / TrafficGameManager.instance.fuel;                        //set fuelSlider value
+            gameMenu.fuelSlider.value = currentFuel / TrafficGameManager.instance.fuel;                        
             IncreaseSpeed();                                                                            
 
-            if (magnetActive) MagnetBar();                                                              //if magnet is active call MagnetBar method
-            if (turboActive)    TurboBar();                                                             //if turbo is active call TurboBar method
-            if (doubleCoinActive) DoubleCoinBar();                                                      //if doubleCoin is active call DoubleCoinBar method
+            if (magnetActive) MagnetBar();                                                              
+            if (turboActive)    TurboBar();                                                             
+            if (doubleCoinActive) DoubleCoinBar();                                                      
         }
-	}
-
-    /*-------------------------------------------------- Button Methods--------------------------------------------------------------*/
+    }
 
     #region Button Methods
-    public void PlayBtn()                                                                               //called by Play Button
+    public void PlayBtn()                                                                               
     {
-        //GameAnalytics.NewProgressionEvent(GAProgressionStatus.Start, "game");
-        SoundManager.instance.PlayFX("BtnClick");                                                       //play the sound
-        MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(-480, 0), 0.5f, 0f, Ease.OutFlash);   //slide out menuPanel
-        MoveUI(gameMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);      //slide in gamemenu panel
-        SoundManager.instance.PlayGameMusic();                                                          //play game music
+        SoundManager.instance.PlayFX("BtnClick");                                                       
+        MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(-480, 0), 0.5f, 0f, Ease.OutFlash);   
+        MoveUI(gameMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);      
+        SoundManager.instance.PlayGameMusic();                                                          
 
         if (TrafficGameManager.instance.tutorialShowned == false)
             tutorialElements.tutorialPanel.SetActive(true);
@@ -245,7 +239,7 @@ public class GuiManager : MonoBehaviour {
     void PlayMethod()
     {      
         currentFuel = TrafficGameManager.instance.fuel;     
-        startCountDown = true;                                                                          //set startCountDown to true
+        startCountDown = true;                                                                          
     }
 
     public void TipButton(string value)
@@ -308,146 +302,162 @@ public class GuiManager : MonoBehaviour {
         }
     }
 
-    public void GDPRConsetBtn(int value)                                                                //called by GDPR Button
+    public void GDPRConsetBtn(int value)                                                                
     {
-        TrafficGameManager.instance.GDPRConset = value;                                                        //set GDPRConset to value
-        TrafficGameManager.instance.Save();                                                                    //save it
-        gdprAdmobPanel.SetActive(false);                                                                //deactivate panel
+        TrafficGameManager.instance.GDPRConset = value;                                                        
+        TrafficGameManager.instance.Save();                                                                    
+        gdprAdmobPanel.SetActive(false);                                                                
     }
 
-    public void MenuBtns(string value)                                                                  //buttons functions
+    public void MenuBtns(string value)                                                                  
     {
-        SoundManager.instance.PlayFX("BtnClick");                                                       //play sound
-        if (value == "facebook")                                                                        //if value is facebook
+        SoundManager.instance.PlayFX("BtnClick");                                                       
+        if (value == "facebook")                                                                        
         {
-            //Application.OpenURL(vars.facebookUrl);                                                      //open facebook page 
-            FacebookScript.instance.FacebookLogin();
         }
-        else if (value == "sound")                                                                      //if value is sound
+        else if (value == "sound")                                                                      
         {
-            //sound button
-            if (TrafficGameManager.instance.isMusicOn == true)                                                 //if isMusicOn is true
+            if (TrafficGameManager.instance.isMusicOn == true)                                                 
             {
-                TrafficGameManager.instance.isMusicOn = false;                                                 //set isMusicOn t0 false
-                AudioListener.volume = 0;                                                               //set volume to 0
-                mainMenu.soundBtnImg.sprite = mainMenu.soundOn;                                         //set the soundBtn sprite to soundOn
+                TrafficGameManager.instance.isMusicOn = false;                                                 
+                AudioListener.volume = 0;                                                               
+                mainMenu.soundBtnImg.sprite = mainMenu.soundOn;                                         
             }
-            else                                                                                        //else
+            else                                                                                        
             {
-                TrafficGameManager.instance.isMusicOn = true;                                                  //set isMusicOn to true
-                AudioListener.volume = 1;                                                               //set volume to 1
-                mainMenu.soundBtnImg.sprite = mainMenu.soundOff;                                        //set the soundBtn sprite to soundOff
+                TrafficGameManager.instance.isMusicOn = true;                                                  
+                AudioListener.volume = 0.35f;                                                               
+                mainMenu.soundBtnImg.sprite = mainMenu.soundOff;                                        
             }
-            TrafficGameManager.instance.Save();                                                                //save the data
+            TrafficGameManager.instance.Save();                                                                
         }
-        else if (value == "moregames")                                                                  //if value is moregames
+        else if (value == "moregames")                                                                  
         {   
-            Application.OpenURL(vars.moregamesUrl);                                                     //open moregames page 
+            Application.OpenURL(vars.moregamesUrl);                                                     
         }
-        else if (value == "rate")                                                                       //if value is rate
+        else if (value == "rate")                                                                       
         {
 #if UNITY_ANDROID
-            Application.OpenURL(vars.rateButtonUrl);                                                    //open rate page 
-#elif UNITY_IOS
-            Application.OpenURL("itms-apps://itunes.apple.com/app/" + vars.rateButtonUrl);
+            Application.OpenURL(vars.rateButtonUrl);                                                    
 #endif
         }
-        else if (value == "noads")                                                                      //if value is noads
+        else if (value == "noads")                                                                      
         {
-#if UnityIAP
-            Purchaser.instance.BuyNoAds();                                                              //buy ads
-#endif
         }
-        else if (value == "restore")                                                                      //if value is noads
+        else if (value == "restore")                                                                    
         {
-#if UnityIAP
-            Purchaser.instance.RestorePurchases();                                                              //buy ads
-#endif
         }
-        else if (value == "revive")                                                                     //if value is revive
+        else if (value == "revive")                                                                     
         {
-            UnityAds.instance.rewardType = RewardType.reborn;                                           //set reward ads type
-            UnityAds.instance.ShowRewardedAd();                                                         //show reward ads
         }
-        else if (value == "gameover")                                                                   //if value is gameover
+        else if (value == "gameover")                                                                   
         {
-            GameOver();                                                                                 //call GameOver method
-            MoveUI(reviveMenu.GetComponent<RectTransform>(), new Vector2(0, -800), 0.5f, 0f, Ease.OutFlash);    //slide out reviveMenu
-            MoveUI(gameoverMenu.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);     //slide in gameoverMenu
+            GameOver();                                                                                 
+            MoveUI(reviveMenu.GetComponent<RectTransform>(), new Vector2(0, -800), 0.5f, 0f, Ease.OutFlash);    
+            MoveUI(gameoverMenu.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);     
         }
-        else if (value == "replay")                                                                     //if value is replay
+        else if (value == "replay")                                                                     
         {
-            TrafficGameManager.instance.retry = true;                                                          //if retry is true
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);                                 //reload the current scene
+            Time.timeScale = 1f; 
+            MonoBehaviour loader = FindObjectOfType<MiniGameLoader>(); // Safely find your main room script
+            
+            if (loader != null) {
+                // Hand the timer over to the safe Main Room so it survives the deletion!
+                loader.StartCoroutine(PerformRestart(gameObject.scene.name, true));
+            } else {
+                PlayerPrefs.SetInt("AutoStartRace", 1);
+                SceneManager.LoadScene(gameObject.scene.name);
+            }
         }
-        else if (value == "home")                                                                       //if value is home
+        else if (value == "home")                                                                       
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);                                 //load the current scene
+            Time.timeScale = 1f; 
+            MonoBehaviour loader = FindObjectOfType<MiniGameLoader>(); 
+            
+            if (loader != null) {
+                // Hand the timer over to the safe Main Room so it survives the deletion!
+                loader.StartCoroutine(PerformRestart(gameObject.scene.name, false));
+            } else {
+                PlayerPrefs.SetInt("AutoStartRace", 0);
+                SceneManager.LoadScene(gameObject.scene.name);
+            }
         }
-        else if (value == "share")                                                                      //if value is share
+        else if (value == "share")                                                                      
         {
-            ShareScreenShot.instance.ShareTextMethod();                                                 //share the text
         }
-        else if (value == "leaderboard")                                                               //if value is share
+        else if (value == "leaderboard")                                                                 
         {
-#if UNITY_ANDROID
-            GooglePlayManager.singleton.OpenLeaderboardsScore();
-#elif UNITY_IOS
-        LeaderboardiOSManager.instance.ShowLeaderboard();
-#endif
         }
-        else if (value == "openShop")                                                                   //if value is openShop
+        else if (value == "openShop")                                                                   
         {
-            CarShop.instance.InitializeCarShop();                                                       //call InitializeCarShop method
-            SoundManager.instance.PlayFX("BtnClick");                                                   //play sound
-            MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(-480, 0), 0.5f, 0f, Ease.OutFlash);   //slide out main menu panel
-            MoveUI(carShopPanel.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);     //slide in car shop panel
+            CarShop.instance.InitializeCarShop();                                                       
+            SoundManager.instance.PlayFX("BtnClick");                                                   
+            MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(-480, 0), 0.5f, 0f, Ease.OutFlash);   
+            MoveUI(carShopPanel.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);     
         }
-        else if (value == "closeShop")                                                                  //if value is closeShop
+        else if (value == "closeShop")                                                                  
         {
-            SoundManager.instance.PlayFX("BtnClick");                                                   //play sound
-            MoveUI(carShopPanel.GetComponent<RectTransform>(), new Vector2(480, 0), 0.5f, 0f, Ease.OutFlash);   //slide out car shop panel
-            MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);      //slide in main menu panel
+            SoundManager.instance.PlayFX("BtnClick");                                                   
+            MoveUI(carShopPanel.GetComponent<RectTransform>(), new Vector2(480, 0), 0.5f, 0f, Ease.OutFlash);   
+            MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);      
         }
-        else if (value == "openPWShop")                                                                 //if value is openPWShop
+        else if (value == "openPWShop")                                                                 
         {
             SoundManager.instance.PlayFX("BtnClick");
-            MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(480, 0), 0.5f, 0f, Ease.OutFlash);    //slide out main menu panel
-            MoveUI(powerupShop.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);      //slide in powerupShop panel
+            MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(480, 0), 0.5f, 0f, Ease.OutFlash);    
+            MoveUI(powerupShop.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);      
         }
-        else if (value == "closePWShop")                                                                //if value is closePWShop
+        else if (value == "closePWShop")                                                                
         {
-            SoundManager.instance.PlayFX("BtnClick");                                                   //play sound
-            MoveUI(powerupShop.GetComponent<RectTransform>(), new Vector2(-480, 0), 0.5f, 0f, Ease.OutFlash);   //slide out powerupShop panel
-            MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);      //slide in main menu panel
+            SoundManager.instance.PlayFX("BtnClick");                                                   
+            MoveUI(powerupShop.GetComponent<RectTransform>(), new Vector2(-480, 0), 0.5f, 0f, Ease.OutFlash);   
+            MoveUI(mainMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0f, Ease.OutFlash);      
         }
-        else if (value == "opengiftPanel")                                                              //if value is opengiftPanel
+        else if (value == "opengiftPanel")                                                              
         {
-            SoundManager.instance.PlayFX("BtnClick");                                                   //play sound
-            TrafficGameManager.instance.giftPoints = 0;                                                        //set giftPoints to 0
-            TrafficGameManager.instance.Save();                                                                //save it
-            gameOverMenu.giftPanel.SetActive(true);                                                     //activate giftPanel
+            SoundManager.instance.PlayFX("BtnClick");                                                   
+            TrafficGameManager.instance.giftPoints = 0;                                                        
+            TrafficGameManager.instance.Save();                                                                
+            gameOverMenu.giftPanel.SetActive(true);                                                     
         }
-        else if (value == "closegiftPanel")                                                             //if value is closegiftPanel
+        else if (value == "closegiftPanel")                                                             
         {
-            gameOverMenu.giftbtn.interactable = true;                                                   //set giftbtn interactable to true
-            SoundManager.instance.PlayFX("BtnClick");                                                   //play sound
-            gameOverMenu.giftPanel.SetActive(false);                                                    //deactivate giftPanel
+            gameOverMenu.giftbtn.interactable = true;                                                   
+            SoundManager.instance.PlayFX("BtnClick");                                                   
+            gameOverMenu.giftPanel.SetActive(false);                                                    
         }   
-        else if (value == "collectGift")                                                                //if value is collectGift
+        else if (value == "collectGift")                                                                
         {
-            SoundManager.instance.PlayFX("BtnClick");                                                   //play sound    
-            gameOverMenu.collectBtn.interactable = false;                                               //set collectBtn interactable to false
+            SoundManager.instance.PlayFX("BtnClick");                                                   
+            gameOverMenu.collectBtn.interactable = false;                                               
 
-            coinUIObj = ObjectPooling.instance.GetPickUpFXPooledObject("CoinUIFX");                     //get coinUI fx
-            coinUIObj.transform.position = gameOverMenu.collectBtn.transform.position;                  //set its transform
-            coinUIObj.SetActive(true);                                                                  //activate it
-            float r = Random.Range(0.25f, 0.8f);                                                        //get random number
-            coinUIObj.transform.DOMove(gameOverMenu.coinImg.transform.position, r).OnComplete(DeactivateUICoin).SetEase(Ease.Linear); //move the coin 
+            coinUIObj = ObjectPooling.instance.GetPickUpFXPooledObject("CoinUIFX");                     
+            coinUIObj.transform.position = gameOverMenu.collectBtn.transform.position;                  
+            coinUIObj.SetActive(true);                                                                  
+            float r = Random.Range(0.25f, 0.8f);                                                        
+            coinUIObj.transform.DOMove(gameOverMenu.coinImg.transform.position, r).OnComplete(DeactivateUICoin).SetEase(Ease.Linear);  
         }
     }
 
-#endregion
+    // --- THE PERFECT RELOAD TIMER ---
+    private IEnumerator PerformRestart(string sceneName, bool autoStart)
+    {
+        PlayerPrefs.SetInt("AutoStartRace", autoStart ? 1 : 0);
+        
+        // 1. Tell the old crashed scene to delete itself FIRST
+        AsyncOperation unloadOp = SceneManager.UnloadSceneAsync(sceneName);
+        
+        // 2. WAIT until the old scene is 100% wiped from memory (killing the old Game Managers)
+        while (!unloadOp.isDone)
+        {
+            yield return null;
+        }
+        
+        // 3. ONLY THEN, spawn the brand new scene so the new Managers take over perfectly!
+        SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+    }
+
+    #endregion
 
     /*--------------------------------------------------Basic Methods----------------------------------------------------------------*/
 
@@ -455,110 +465,110 @@ public class GuiManager : MonoBehaviour {
 
     public void ActivateMagnet()
     {
-        currentMagnetTime = TrafficGameManager.instance.magnetTime;                //set the currentMagnetTime to TrafficGameManager.instance.magnetTime
-        gameMenu.magnetUI.SetActive(true);                                                              //activate magnetUI
-        magnetActive = true;                                                                            //set magnetActive to true
+        currentMagnetTime = TrafficGameManager.instance.magnetTime;                
+        gameMenu.magnetUI.SetActive(true);                                                              
+        magnetActive = true;                                                                            
     }
 
     void MagnetBar()
     {
-        if (currentMagnetTime > 0)                                                                      //if currentMagnetTime is more than 0
+        if (currentMagnetTime > 0)                                                                      
         {
-            currentMagnetTime -= Time.deltaTime;                                                        //reduce currentMagnetTime by Time.DeltaTime
-            gameMenu.magnetImg.fillAmount = currentMagnetTime / TrafficGameManager.instance.magnetTime;        //set fillAmount
+            currentMagnetTime -= Time.deltaTime;                                                        
+            gameMenu.magnetImg.fillAmount = currentMagnetTime / TrafficGameManager.instance.magnetTime;        
         }
             
-        if (currentMagnetTime <= 0)                                                                     //if currentMagnetTime is less than 0
+        if (currentMagnetTime <= 0)                                                                     
         {
-            PlayerController.instance.DeactivateEffects("magnet");                                      //deactivate magnet effect
-            gameMenu.magnetUI.SetActive(false);                                                         //deactivate magnetUI
-            magnetActive = false;                                                                       //set magnetActive to false
+            PlayerController.instance.DeactivateEffects("magnet");                                      
+            gameMenu.magnetUI.SetActive(false);                                                         
+            magnetActive = false;                                                                       
         }
     }
 
     public void ActivateTurbo()
     {
-        currentSpeed += 1.5f;                                                                           //increase currentSpeed
-        road.ScrollSpeed = currentSpeed;                                                                //set road scrollSpeed
-        turboEffect.SetActive(true);                                                                    //activate turboEffect
-        currentTurboTime = TrafficGameManager.instance.turboTime;                  //set the currentTurboTime to TrafficGameManager.instance.turboTime
-        gameMenu.turboUI.SetActive(true);                                                               //activate turboUI
-        turboActive = true;                                                                             //set turboActive to true
-        distanceMultiplier += TrafficGameManager.instance.turboSpeed;                                          //increase distanceMultiplier
+        currentSpeed += 1.5f;                                                                           
+        road.ScrollSpeed = currentSpeed;                                                                
+        turboEffect.SetActive(true);                                                                    
+        currentTurboTime = TrafficGameManager.instance.turboTime;                  
+        gameMenu.turboUI.SetActive(true);                                                               
+        turboActive = true;                                                                             
+        distanceMultiplier += TrafficGameManager.instance.turboSpeed;                                          
     }
 
     void TurboBar()
     {
-        if (currentTurboTime > 0)                                                                       //if currentTurboTime is more than 0
+        if (currentTurboTime > 0)                                                                       
         {
-            currentTurboTime -= Time.deltaTime;                                                         //reduce currentTurboTime by Time.DeltaTime
-            gameMenu.turboImg.fillAmount = currentTurboTime / TrafficGameManager.instance.turboTime;           //set fillAmount
+            currentTurboTime -= Time.deltaTime;                                                         
+            gameMenu.turboImg.fillAmount = currentTurboTime / TrafficGameManager.instance.turboTime;           
         }
 
-        if (currentTurboTime <= 0)                                                                      //if currentTurboTime is less than 0
+        if (currentTurboTime <= 0)                                                                      
         {
-            currentSpeed -= 1.5f;                                                                       //decrease currentSpeed
-            road.ScrollSpeed = currentSpeed;                                                            //set road scrollSpeed
-            turboEffect.SetActive(false);                                                               //deactivate turboEffect
-            distanceMultiplier = TrafficGameManager.instance.normalSpeed;                                      //set distanceMultiplier
-            PlayerController.instance.DeactivateEffects("turbo");                                       //deactivate player turboEffect
-            gameMenu.turboUI.SetActive(false);                                                          //deactivate turboUI
-            turboActive = false;                                                                        //set turboActive to false
+            currentSpeed -= 1.5f;                                                                       
+            road.ScrollSpeed = currentSpeed;                                                            
+            turboEffect.SetActive(false);                                                               
+            distanceMultiplier = TrafficGameManager.instance.normalSpeed;                                      
+            PlayerController.instance.DeactivateEffects("turbo");                                       
+            gameMenu.turboUI.SetActive(false);                                                          
+            turboActive = false;                                                                        
         }
     }
 
     public void ActivateDoubleCoin()
     {
-        coinIncreaser = 2;                                                                              //set coinIncreaser to 2
-        currentDoubleCoinTime = TrafficGameManager.instance.doubleCoinTime;       //set the currentDoubleCoinTime to TrafficGameManager.instance.doubleCoinTime
-        gameMenu.doubleCoinUI.SetActive(true);                                                          //activate doubleCoinUI
-        doubleCoinActive = true;                                                                        //set doubleCoinActive to true
+        coinIncreaser = 2;                                                                              
+        currentDoubleCoinTime = TrafficGameManager.instance.doubleCoinTime;       
+        gameMenu.doubleCoinUI.SetActive(true);                                                          
+        doubleCoinActive = true;                                                                        
     }
 
     void DoubleCoinBar()
     {
-        if (currentDoubleCoinTime > 0)                                                                  //if currentDoubleCoinTime is more than 0
+        if (currentDoubleCoinTime > 0)                                                                  
         {
-            currentDoubleCoinTime -= Time.deltaTime;                                                    //reduce currentDoubleCoinTime by Time.DeltaTime
-            gameMenu.doubleCoinImg.fillAmount = currentDoubleCoinTime / TrafficGameManager.instance.doubleCoinTime;    //set fillAmount
+            currentDoubleCoinTime -= Time.deltaTime;                                                    
+            gameMenu.doubleCoinImg.fillAmount = currentDoubleCoinTime / TrafficGameManager.instance.doubleCoinTime;    
         }
 
-        if (currentDoubleCoinTime <= 0)                                                                 //if currentDoubleCoinTime is less than 0
+        if (currentDoubleCoinTime <= 0)                                                                 
         {
-            coinIncreaser = 1;                                                                          //set coinIncreaser to 1
-            gameMenu.doubleCoinUI.SetActive(false);                                                     //deactivate doubleCoinUI
-            doubleCoinActive = false;                                                                   //set doubleCoinActive to false
+            coinIncreaser = 1;                                                                          
+            gameMenu.doubleCoinUI.SetActive(false);                                                     
+            doubleCoinActive = false;                                                                   
         }
     }
 
-    void IncreaseSpeed()                                                                                //this method increase speed to increase difficulty
+    void IncreaseSpeed()                                                                                
     {
-        if (TrafficGameManager.instance.currentDistance >= speedIncreaser.milestone)                           //if currentDistance is >= to milestone
+        if (TrafficGameManager.instance.currentDistance >= speedIncreaser.milestone)                           
         {
-            speedIncreaser.milestone += speedIncreaser.milestoneIncreaser;                              //increase milestone by milestoneIncreaser
+            speedIncreaser.milestone += speedIncreaser.milestoneIncreaser;                              
 
-            if (currentSpeed < speedIncreaser.maxSpeed)                                                 //if currentSpeed is less than maxSpeed
+            if (currentSpeed < speedIncreaser.maxSpeed)                                                 
             {
-                currentSpeed = currentSpeed * speedIncreaser.speedMultiplier;                           //increase currentSpeed
-                road.ScrollSpeed = currentSpeed;                                                        //set road ScrollSpeed
+                currentSpeed = currentSpeed * speedIncreaser.speedMultiplier;                           
+                road.ScrollSpeed = currentSpeed;                                                        
             }
 
-            if (maxEnemyCarGap > 2)                                                                     //if car gap is more than 2
-                maxEnemyCarGap -= 0.5f;                                                                 //reduce it by 0.5f
+            if (maxEnemyCarGap > 2)                                                                     
+                maxEnemyCarGap -= 0.5f;                                                                 
         }
     }
-                                                                                                        //called when player pckups coin
-    public void IncreaseCoin(int value, GameObject _coinObject)                                         //take 2 variables as input 
+                                                                                                        
+    public void IncreaseCoin(int value, GameObject _coinObject)                                         
     {   
-        TrafficGameManager.instance.currentCoinsEarned += coinIncreaser * value;                               //increase the currentCoins Earned
-        gameMenu.coinText.text = "" + TrafficGameManager.instance.currentCoinsEarned;                          //set the text
-        coinObject = _coinObject;                                                                       //store reference to the coin
-        coinObject.transform.DOMove(gameMenu.coinImg.transform.position, 0.5f).OnComplete(DeactivateCoin).SetEase(Ease.Linear); //move the coin 
+        TrafficGameManager.instance.currentCoinsEarned += coinIncreaser * value;                               
+        gameMenu.coinText.text = "" + TrafficGameManager.instance.currentCoinsEarned;                          
+        coinObject = _coinObject;                                                                       
+        coinObject.transform.DOMove(gameMenu.coinImg.transform.position, 0.5f).OnComplete(DeactivateCoin).SetEase(Ease.Linear);  
     }
 
     public void UpdateTotalCoins()
     {
-        mainMenu.coinText.text = "" + TrafficGameManager.instance.coinAmount;                                  //update coin text
+        mainMenu.coinText.text = "" + TrafficGameManager.instance.coinAmount;                                  
     }
 
     void DeactivateCoin()
@@ -568,114 +578,101 @@ public class GuiManager : MonoBehaviour {
 
     void DeactivateUICoin()
     {
-        SoundManager.instance.CarFX("Coin");                                                            //play coin sound
-        TrafficGameManager.instance.coinAmount += 50;                                                          //add 50 coins
-        TrafficGameManager.instance.Save();                                                                    //save
-        coinUIObj.SetActive(false);                                                                     //deactivate coinUIObj
+        SoundManager.instance.CarFX("Coin");                                                            
+        TrafficGameManager.instance.coinAmount += 50;                                                          
+        TrafficGameManager.instance.Save();                                                                    
+        coinUIObj.SetActive(false);                                                                     
         gameOverMenu.coinText.text = "" + TrafficGameManager.instance.coinAmount;
-        UpdateTotalCoins();                                                                             //update total coin text
+        UpdateTotalCoins();                                                                             
     }
 
-    public void RestoreFuel()                                                                           //call when player pickup fuel
+    public void RestoreFuel()                                                                           
     {   
-        currentFuel = TrafficGameManager.instance.fuel;                                                        //reset currentFuel to max fuel value                                              
-        fuelSpawned = false;                                                                            //fuelSpawned is set to false
+        currentFuel = TrafficGameManager.instance.fuel;                                                        
+        fuelSpawned = false;                                                                            
     }
 
     void GiftBar()
     {
-        giftBarTime += Time.deltaTime;                                                                  //increase giftBarTime with Time.deltaTime
-        var percent = giftBarTime / 1f;                                                                 //set the percent
-        float barFill = TrafficGameManager.instance.giftPoints / 500f;                                         //set barFill ratio
+        giftBarTime += Time.deltaTime;                                                                  
+        var percent = giftBarTime / 1f;                                                                 
+        float barFill = TrafficGameManager.instance.giftPoints / 500f;                                         
 
-        gameOverMenu.giftBar.fillAmount = Mathf.Lerp(0, barFill, percent);                              //set giftBar fillAmount
+        gameOverMenu.giftBar.fillAmount = Mathf.Lerp(0, barFill, percent);                              
     }
 
     public void GameOverMethod()
     {
-        MoveUI(gameMenuObj.GetComponent<RectTransform>(), new Vector2(480,0), 0.5f, 0f, Ease.OutFlash); //slide out gameMenuObj
-        if (UnityAds.instance.RewardAdReady() == true)                                                  //we check if reward ad is ready
-        {
-            if (revived == false)                                                                           //if revive is false
-                MoveUI(reviveMenu.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0.25f, Ease.OutFlash);    //slide in reviveMenu
-            else if (revived == true)                                                                       //if revive is true
-            {
-                GameOver();                                                                                 //call GameOver method
-                MoveUI(gameoverMenu.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0.25f, Ease.OutFlash);  //slide in gameoverMenu
-            }
-        }
-        else
-        {
-            GameOver();                                                                                 //call GameOver method
-            MoveUI(gameoverMenu.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0.25f, Ease.OutFlash);  //slide in gameoverMenu
-        }
-
-        SoundManager.instance.PlayFX("PanelSlide");                                                     //play slide in sound
+        MoveUI(gameMenuObj.GetComponent<RectTransform>(), new Vector2(480,0), 0.5f, 0f, Ease.OutFlash); 
+        
+        GameOver();                                                                             
+        MoveUI(gameoverMenu.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0.25f, Ease.OutFlash);  
+        SoundManager.instance.PlayFX("PanelSlide");                                                 
     }
 
     void GameOver()
     {
-        if (TrafficGameManager.instance.canShowAds == true)
-        {
-            if (TrafficGameManager.instance.gamesPlayed >= vars.showInterstitialAfter)
-            {
-                TrafficGameManager.instance.gamesPlayed = 0;
-                UnityAds.instance.ShowAd();
-            }
+        if (gameOverMenu.coinText != null) 
+            gameOverMenu.coinText.text = "" + TrafficGameManager.instance.coinAmount;                              
+            
+        if (gameOverMenu.coinEarnedText != null) 
+            gameOverMenu.coinEarnedText.text = "+" + TrafficGameManager.instance.currentCoinsEarned;               
+            
+        if (gameOverMenu.scoreText != null) 
+            gameOverMenu.scoreText.text = "" + Mathf.CeilToInt(TrafficGameManager.instance.currentDistance);       
 
-            TrafficGameManager.instance.gamesPlayed++;
+        if (TrafficGameManager.instance.currentDistance > TrafficGameManager.instance.bestDistance)                   
+            TrafficGameManager.instance.bestDistance = Mathf.CeilToInt(TrafficGameManager.instance.currentDistance);  
+
+        TrafficGameManager.instance.lastDistance = Mathf.CeilToInt(TrafficGameManager.instance.currentDistance);      
+        TrafficGameManager.instance.giftPoints += TrafficGameManager.instance.lastDistance;                           
+
+        if (TrafficGameManager.instance.giftPoints > 500)                                                      
+        {
+            TrafficGameManager.instance.giftPoints = 500;                                                      
+            if (gameOverMenu.giftbtn != null) 
+                gameOverMenu.giftbtn.interactable = true;                                                   
         }
 
-        gameOverMenu.coinText.text = "" + TrafficGameManager.instance.coinAmount;                              //set gameOverMenu coinText
-        gameOverMenu.coinEarnedText.text = "+" + TrafficGameManager.instance.currentCoinsEarned;               //set coinEarnedText
-        gameOverMenu.scoreText.text = "" + Mathf.CeilToInt(TrafficGameManager.instance.currentDistance);       //set scoreText
-
-        if (TrafficGameManager.instance.currentDistance > TrafficGameManager.instance.bestDistance)                   //if currentDistance is more than bestDistance
-            TrafficGameManager.instance.bestDistance = Mathf.CeilToInt(TrafficGameManager.instance.currentDistance);  //set bestDistance to currentDistance
-
-        TrafficGameManager.instance.lastDistance = Mathf.CeilToInt(TrafficGameManager.instance.currentDistance);      //set lastDistance to currentDistance
-
-        TrafficGameManager.instance.giftPoints += TrafficGameManager.instance.lastDistance;                           //increase giftPoints
-
-        if (TrafficGameManager.instance.giftPoints > 500)                                                      //if giftPoints is more than 500
-        {
-            TrafficGameManager.instance.giftPoints = 500;                                                      //set giftPoints to 500
-            gameOverMenu.giftbtn.interactable = true;                                                   //make giftbtn interactable
-        }
-
-        //GameAnalytics.NewProgressionEvent(GAProgressionStatus.Complete, "game", TrafficGameManager.instance.lastDistance);
-        TrafficGameManager.instance.coinAmount += TrafficGameManager.instance.currentCoinsEarned;                     //increase coinAmount by currentCoinsEarned
-        TrafficGameManager.instance.Save();                                                                    //save the data
-        giftBarActive = true;                                                                           //set giftBarActive to true
-        gameOverMenu.giftInfoText.text = TrafficGameManager.instance.giftPoints + "/500 To Next Gift";         //set the text
-        gameOverMenu.hiScoreText.text = "" + TrafficGameManager.instance.bestDistance;                         //set hiScoreText
+        TrafficGameManager.instance.coinAmount += TrafficGameManager.instance.currentCoinsEarned;                     
+        TrafficGameManager.instance.Save();                                                                    
+        giftBarActive = true; 
+        
+        if (gameOverMenu.giftInfoText != null) 
+            gameOverMenu.giftInfoText.text = TrafficGameManager.instance.giftPoints + "/500 To Next Gift";         
+            
+        if (gameOverMenu.hiScoreText != null) 
+            gameOverMenu.hiScoreText.text = "" + TrafficGameManager.instance.bestDistance;                         
     }
 
     public void Revive()
     {
-        foreach (GameObject enemyCar in GameObject.FindGameObjectsWithTag("Enemy"))                     //loop through all the nemy car in the scene
+        foreach (GameObject enemyCar in GameObject.FindGameObjectsWithTag("Enemy"))                     
         {   
-            enemyCar.SetActive(false);                                                                  //and deactivate them
+            enemyCar.SetActive(false);                                                                  
         }
 
-        MoveUI(reviveMenu.GetComponent<RectTransform>(), new Vector2(0, -800), 0.5f, 0f, Ease.OutFlash);    //slideOut reviveMenu
-        MoveUI(gameMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0.25f, Ease.OutFlash);   //slide in gameMenuObj
-        TrafficGameManager.instance.playerCar.SetActive(true);                                                 //activate player car
-        gameMenu.countDownText.gameObject.SetActive(true);                                              //activate countDownText
-        currentFuel = TrafficGameManager.instance.fuel;                                                        //set currentFuel to fuel
-        gameMenu.fuelSlider.value = currentFuel / TrafficGameManager.instance.fuel;                            //set fuelSlider value
-        revived = true;                                                                                 //set revived to true
-        TrafficGameManager.instance.gameStarted = false;                                                       //gameStarted to false
-        countDown = 4;                                                                                  //countDown to 4
-        startCountDown = true;                                                                          //set startCountDown to true
-        TrafficGameManager.instance.gameOver = false;                                                          //gameOver to false
+        MoveUI(reviveMenu.GetComponent<RectTransform>(), new Vector2(0, -800), 0.5f, 0f, Ease.OutFlash);    
+        MoveUI(gameMenuObj.GetComponent<RectTransform>(), new Vector2(0, 0), 0.5f, 0.25f, Ease.OutFlash);   
+        TrafficGameManager.instance.playerCar.SetActive(true);                                                 
+        gameMenu.countDownText.gameObject.SetActive(true);                                              
+        currentFuel = TrafficGameManager.instance.fuel;                                                        
+        gameMenu.fuelSlider.value = currentFuel / TrafficGameManager.instance.fuel;                            
+        revived = true;                                                                                 
+        TrafficGameManager.instance.gameStarted = false;                                                       
+        countDown = 4;                                                                                  
+        startCountDown = true;                                                                          
+        TrafficGameManager.instance.gameOver = false;                                                          
     }
 
     public void PickUpPop(string value)
     {
-        gameMenu.pickUpPopText.text = value;                                                            //set the text
-        MoveUI(gameMenu.pickUpPopUI.GetComponent<RectTransform>(), new Vector3(0, 100, 0), 0.5f, 0f, Ease.OutExpo);     //slide in pickUpPopUI
-        MoveUI(gameMenu.pickUpPopUI.GetComponent<RectTransform>(), new Vector3(500, 100, 0), 0.5f, 1f, Ease.OutExpo);   //slide out pickUpPopUI after 1s of delay
+        if (gameMenu.pickUpPopText != null && gameMenu.pickUpPopUI != null)
+        {
+            gameMenu.pickUpPopText.text = value;                                                            
+            MoveUI(gameMenu.pickUpPopUI.GetComponent<RectTransform>(), new Vector3(0, 100, 0), 0.5f, 0f, Ease.OutExpo);     
+            MoveUI(gameMenu.pickUpPopUI.GetComponent<RectTransform>(), new Vector3(500, 100, 0), 0.5f, 1f, Ease.OutExpo);   
+        }
     }
 
 #endregion
@@ -697,34 +694,34 @@ public class GuiManager : MonoBehaviour {
     [System.Serializable]
     protected class GameMenu
     {
-        public Image coinImg, magnetImg, turboImg, doubleCoinImg;                                       //ref to image objects
-        public Slider fuelSlider;                                                                       //ref to slider
-        public Text coinText, distanceText, countDownText, pickUpPopText;                               //ref to text
-        public GameObject pickUpPopUI, magnetUI, doubleCoinUI, turboUI;                                 //ref to gameobjects
+        public Image coinImg, magnetImg, turboImg, doubleCoinImg;                                       
+        public Slider fuelSlider;                                                                       
+        public Text coinText, distanceText, countDownText, pickUpPopText;                               
+        public GameObject pickUpPopUI, magnetUI, doubleCoinUI, turboUI;                                 
     }
 
 
     [System.Serializable]
     protected class MainMenu
     {
-        public Image soundBtnImg;                                                                       //ref to image object
-        public Text coinText;                                                                           //ref to text
-        public Sprite soundOn, soundOff;                                                                //ref to sprites for sound button
+        public Image soundBtnImg;                                                                       
+        public Text coinText;                                                                           
+        public Sprite soundOn, soundOff;                                                                
     }
 
     [System.Serializable]
     protected class GameOverMenu
     {
-        public Image soundBtnImg, giftBar;                                                              //ref to image objects
-        public Text coinText, scoreText, hiScoreText, coinEarnedText, giftInfoText;                     //ref to text
-        public Button rewardAdsbtn, giftbtn, collectBtn;                                                //ref to buttons
-        public GameObject giftPanel, coinImg;                                                           //ref to gameobjects
+        public Image soundBtnImg, giftBar;                                                              
+        public Text coinText, scoreText, hiScoreText, coinEarnedText, giftInfoText;                     
+        public Button rewardAdsbtn, giftbtn, collectBtn;                                                
+        public GameObject giftPanel, coinImg;                                                           
     }
 
     [System.Serializable]
     protected class SpeedIncreaser
     {
-        public float milestone, milestoneIncreaser, maxSpeed, speedMultiplier;                          //speed multipliers variables
+        public float milestone, milestoneIncreaser, maxSpeed, speedMultiplier;                          
     }
 
     [System.Serializable]

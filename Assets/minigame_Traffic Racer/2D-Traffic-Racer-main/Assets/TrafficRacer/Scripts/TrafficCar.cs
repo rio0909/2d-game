@@ -1,8 +1,8 @@
 ﻿/***********************************************************************************************************
- * Produced by Madfireon:               https://www.madfireongames.com/									   *
- * Facebook:                            https://www.facebook.com/madfireon/								   *
- * Contact us:                          https://www.madfireongames.com/contact							   *
- * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw											   *
+ * Produced by Madfireon:               https://www.madfireongames.com/                                    *
+ * Facebook:                            https://www.facebook.com/madfireon/                                *
+ * Contact us:                          https://www.madfireongames.com/contact                             *
+ * Madfireon Unity Asset Store catalog: https://bit.ly/2JjKCtw                                             *
  * Developed by Swapnil Rane:           https://in.linkedin.com/in/swapnilrane24                           *
  ***********************************************************************************************************/
 
@@ -31,9 +31,20 @@ public class TrafficCar : MonoBehaviour {
     {
         randomSpeed = Random.Range(2, 5);                         //get values between 10 and 15
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // --- FIX: WAKE UP THE HITBOX EVERY TIME IT IS RECYCLED ---
+    void OnEnable()
+    {
+        Collider2D col = GetComponent<Collider2D>();
+        if (col != null)
+        {
+            col.enabled = true; 
+        }
+    }
+    // ---------------------------------------------------------
+    
+    // Update is called once per frame
+    void Update ()
     {
         if (TrafficGameManager.instance.gameOver == true) return;
 
