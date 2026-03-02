@@ -4,15 +4,20 @@ using UnityEngine.SceneManagement;
 public class ScenePortal : MonoBehaviour, IInteractable
 {
     [SerializeField] private string targetSceneName = "LectureHall";
-    [SerializeField] private string targetSpawnId = "LectureHall";
+    
+    [Header("Exact Spawn Coordinates")]
+    [Tooltip("Type the exact X and Y coordinates the player should land on in the new scene.")]
+    [SerializeField] private Vector2 targetPosition;
 
     public void Interact()
     {
-        // remember where to spawn in next scene
-        PlayerPrefs.SetString("SpawnId", targetSpawnId);
+        // 1. Save the exact coordinates into PlayerPrefs
+        PlayerPrefs.SetFloat("SpawnX", targetPosition.x);
+        PlayerPrefs.SetFloat("SpawnY", targetPosition.y);
+        PlayerPrefs.SetInt("UseCoords", 1); // A flag to tell the spawner to use coords
         PlayerPrefs.Save();
 
-        // load scene
+        // 2. Load the scene
         SceneManager.LoadScene(targetSceneName);
     }
 }

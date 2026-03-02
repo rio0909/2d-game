@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 84e5a76f86253094daf5a6fae64ab2a9
+guid: d27e74140ba629c44a9e1ecccdd56520
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 8035404284244447975
-    second: Stylish_Wallpaper_0
+      213: 5436588485812611619
+    second: wooden_cabinet_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Stylish_Wallpaper_0
+      name: wooden_cabinet_0
       rect:
         serializedVersion: 2
-        x: 24
-        y: 20
-        width: 978
-        height: 710
+        x: 20
+        y: 2
+        width: 106
+        height: 525
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 7e2da058f9d738f60800000000000000
-      internalID: 8035404284244447975
+      spriteID: 32ae6de6c64a27b40800000000000000
+      internalID: 5436588485812611619
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Stylish_Wallpaper_0: 8035404284244447975
+      wooden_cabinet_0: 5436588485812611619
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

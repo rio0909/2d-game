@@ -10,59 +10,54 @@ public class NPCDialogue : MonoBehaviour, IInteractable
     [TextArea(3, 10)]
     public string[] lines;
 
+    [Header("Post-Conversation")]
+    public bool stopAfterFirstTime = true;
+    [TextArea(2, 5)] public string[] completedLines; 
+    
+    private bool hasFinishedMainDialogue = false;
+    private int currentIndex = 0; 
     private SpriteRenderer sr;
 
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
     }
+
+    public int GetCurrentIndex() { return currentIndex; }
+    public void SetCurrentIndex(int val) { currentIndex = val; }
+    public void MarkAsComplete() { hasFinishedMainDialogue = true; }
+    public bool HasFinished() { return hasFinishedMainDialogue; }
     
     public void Interact()
     {
-        // 1. FIND THE PLAYER RIGHT NOW (Fresh check)
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        Transform playerTransform = playerObj != null ? playerObj.transform : null;
-
-        // 2. LOOK AT PLAYER
-        if (playerTransform != null)
+        if (hasFinishedMainDialogue && stopAfterFirstTime)
         {
-            // If player is to the LEFT, face LEFT
-            if (playerTransform.position.x < transform.position.x) 
+            if (completedLines.Length > 0)
             {
-                sr.flipX = true; 
+                DialogueUI.Instance.Show(npcName, completedLines, face, this);
             }
-            // If player is to the RIGHT, face RIGHT
-            else 
-            {
-                sr.flipX = false;
-            }
+            return; 
         }
 
-        // 3. PREPARE LINES (Replace {player} with real name)
+        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+        if (playerObj != null && sr != null)
+        {
+            sr.flipX = (playerObj.transform.position.x < transform.position.x);
+        }
+
         string[] finalLines = new string[lines.Length];
         for (int i = 0; i < lines.Length; i++)
         {
             finalLines[i] = lines[i].Replace("{player}", GameData.playerName);
         }
 
-        // 4. SHOW DIALOGUE UI
-        DialogueUI.Instance.Show(npcName, finalLines, face);
+        DialogueUI.Instance.Show(npcName, finalLines, face, this);
 
-        // --- SPECIAL NPC LOGIC ---
-        
-        // Logic for Prof. Rio
-        if (npcName == "Prof. Rio")
+        // Check Prof Logic ONLY if actually finished
+        if (npcName == "Prof. Rio" && hasFinishedMainDialogue)
         {
             GameData.hasLabAccess = true;
             GameData.SaveGame();
-            Debug.Log("Access Granted: Lab Unlocked!");
-        }
-
-        // Logic for Prof. Jessi (New!)
-        if (npcName == "Prof. Jessi")
-        {
-            Debug.Log("Prof. Jessi is teaching class.");
-            // Later you can add: GameData.hasAttendedClass = true;
         }
     }
 }

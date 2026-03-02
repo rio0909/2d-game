@@ -9,11 +9,7 @@ public class PlayerSpawner : MonoBehaviour
     [Tooltip("Optional. If left empty, the spawner will find the Player by tag 'Player' each scene.")]
     [SerializeField] private Transform player;
 
-    [Header("Spawn Settings")]
-    [Tooltip("PlayerPrefs key used by ScenePortal to store the target spawn id.")]
-    [SerializeField] private string spawnPrefKey = "SpawnId";
-
-    [Tooltip("How long to wait after scene load before searching spawn points (helps when objects spawn on Start).")]
+    [Tooltip("How long to wait after scene load before moving the player.")]
     [SerializeField] private float delayAfterSceneLoad = 0.05f;
 
     private void Awake()
@@ -52,14 +48,14 @@ public class PlayerSpawner : MonoBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Spawn after a tiny delay so SpawnPoints/Player exist
+        // Spawn after a tiny delay so the Player exists in the new scene
         CancelInvoke(nameof(TrySpawnNow));
         Invoke(nameof(TrySpawnNow), delayAfterSceneLoad);
     }
 
     private void TrySpawnNow()
     {
-        // If player not assigned or got destroyed, try find by tag
+        // 1. Find the Player if we don't have them
         if (player == null)
         {
             var go = GameObject.FindGameObjectWithTag("Player");
@@ -68,28 +64,23 @@ public class PlayerSpawner : MonoBehaviour
 
         if (player == null)
         {
-            Debug.LogWarning("PlayerSpawner: Player not found. Make sure your player has tag 'Player' or assign it in Inspector.");
+            Debug.LogWarning("PlayerSpawner: Player not found!");
             return;
         }
 
-        string want = PlayerPrefs.GetString(spawnPrefKey, "");
-        if (string.IsNullOrEmpty(want))
-            return; // no requested spawn
-
-        var spawns = Object.FindObjectsByType<SpawnPoint>(FindObjectsSortMode.None);
-        foreach (var p in spawns)
+        // 2. Check for Exact Coordinates
+        if (PlayerPrefs.GetInt("UseCoords", 0) == 1)
         {
-            if (p.spawnId == want)
-            {
-                player.position = p.transform.position;
-
-                // Optional: clear after using so it doesn't keep re-teleporting on future loads
-                PlayerPrefs.DeleteKey(spawnPrefKey);
-
-                return;
-            }
+            float x = PlayerPrefs.GetFloat("SpawnX", 0f);
+            float y = PlayerPrefs.GetFloat("SpawnY", 0f);
+            
+            // Move player to exact coords (keeping original Z just in case)
+            player.position = new Vector3(x, y, player.position.z);
+            
+            // Erase the data so we don't accidentally teleport next time we play
+            PlayerPrefs.DeleteKey("UseCoords");
+            PlayerPrefs.DeleteKey("SpawnX");
+            PlayerPrefs.DeleteKey("SpawnY");
         }
-
-        Debug.LogWarning($"PlayerSpawner: No SpawnPoint found with spawnId '{want}' in this scene.");
     }
 }

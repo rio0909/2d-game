@@ -881,7 +881,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 10
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 8793639957104055765, guid: 105f38ce82715964c9b35dec1b016d31, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -919,7 +919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 411a6b176b6100a4686f20621f9a8cf6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement2D
-  moveSpeed: 16
+  moveSpeed: 8
   rb: {fileID: 311729729}
   animator: {fileID: 311729735}
   spriteRenderer: {fileID: 311729730}
@@ -961,7 +961,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 0.8666667, y: 2.72}
     newSize: {x: 3.4375, y: 8.734375}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -1154,7 +1154,7 @@ GameObject:
   - component: {fileID: 340258423}
   - component: {fileID: 340258422}
   m_Layer: 0
-  m_Name: Door (1)
+  m_Name: Door_library
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1577,7 +1577,7 @@ Transform:
   m_GameObject: {fileID: 366392365}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -13.74, z: 0}
+  m_LocalPosition: {x: 0, y: -13.558182, z: 0}
   m_LocalScale: {x: 55, y: 20, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4683,7 +4683,7 @@ Transform:
   m_GameObject: {fileID: 1200734974}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -13.74, z: 0}
+  m_LocalPosition: {x: 0, y: -13.649091, z: 0}
   m_LocalScale: {x: 55, y: 20, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -4797,6 +4797,7 @@ MonoBehaviour:
   nameText: {fileID: 2146304557}
   bodyText: {fileID: 115666522}
   charDelay: 0.0127
+  autoCloseDistance: 3.5
 --- !u!1 &1256312759
 GameObject:
   m_ObjectHideFlags: 0
@@ -6949,7 +6950,7 @@ Transform:
   m_GameObject: {fileID: 1594795320}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -13.74, z: 0}
+  m_LocalPosition: {x: 0, y: -13.497576, z: 0}
   m_LocalScale: {x: 55, y: 20, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7185,7 +7186,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 38.7
+  m_fontSize: 35.85
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7711,6 +7712,8 @@ MonoBehaviour:
   face: {fileID: 0}
   lines:
   - mein maderchod hu jo ynha aya rio bhai !
+  stopAfterFirstTime: 1
+  completedLines: []
 --- !u!1 &1720059970
 GameObject:
   m_ObjectHideFlags: 0
@@ -9903,6 +9906,8 @@ MonoBehaviour:
   - Yo {player}! Where have you been?
   - Prof. Rio is looking for you.
   - He's over by the main entrance. You better hurry!
+  stopAfterFirstTime: 1
+  completedLines: []
 --- !u!212 &2024039381
 SpriteRenderer:
   serializedVersion: 2
@@ -10111,7 +10116,7 @@ Transform:
   m_GameObject: {fileID: 2055848508}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -13.74, z: 0}
+  m_LocalPosition: {x: 0, y: -13.568282, z: 0}
   m_LocalScale: {x: 55, y: 20, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10263,8 +10268,8 @@ Transform:
   m_GameObject: {fileID: 2096473097}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.00000058114523}
-  m_LocalPosition: {x: 11.96641, y: -8.487761, z: 0}
-  m_LocalScale: {x: -0.25931332, y: 0.2818623, z: 0.2818623}
+  m_LocalPosition: {x: 12.021409, y: -8.417761, z: -0.00000006392577}
+  m_LocalScale: {x: -0.29434654, y: 0.298013, z: 0.2818623}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 968341758}
@@ -10333,6 +10338,8 @@ MonoBehaviour:
   - '{player}! Why are you wandering around outside?'
   - Don't you know finals are next week? There is no time for loitering.
   - Get to your classroom and study. I expect top marks from you.
+  stopAfterFirstTime: 1
+  completedLines: []
 --- !u!1 &2103323896
 GameObject:
   m_ObjectHideFlags: 0

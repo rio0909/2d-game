@@ -33,7 +33,7 @@ public static class GameData
     public static void ResetData()
     {
         PlayerPrefs.DeleteAll();
-        playerName = "Rio";
+        playerName = "Jassi";
         hasLabAccess = false;
         Debug.Log("Data Wiped.");
     }

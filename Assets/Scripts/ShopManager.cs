@@ -26,6 +26,10 @@ public class ShopManager : MonoBehaviour
 
     [Header("Shop Items")]
     public ShopItem[] items;               
+    
+    // --- NEW: Shop UI Assets ---
+    [Header("Shop UI Assets")]
+    public Sprite boughtButtonSprite; 
 
     private int currentItemIndex;          
 
@@ -35,6 +39,9 @@ public class ShopManager : MonoBehaviour
         LoadShopProgress();
 
         UpdateScoreUI();
+        
+        // 2. UPDATE BUTTON PICTURES
+        UpdateShopButtonsUI(); 
         
         // Reset the views
         if (shopMainView != null) shopMainView.SetActive(true);
@@ -51,9 +58,9 @@ public class ShopManager : MonoBehaviour
         // 1. IF ALREADY OWNED
         if (item.isOwned)
         {
-            OpenEquipPopup(index);
-            if (shopMainView != null) shopMainView.SetActive(false);
-            return;
+            // Do absolutely nothing! The button shouldn't be clickable anyway, 
+            // but this is a safety check.
+            return; 
         }
 
         // 2. IF BUYING NEW
@@ -68,6 +75,9 @@ public class ShopManager : MonoBehaviour
             // --------------------
 
             UpdateScoreUI();
+            
+            // Change the button pic and turn it off instantly
+            UpdateShopButtonsUI(); 
             
             OpenEquipPopup(index); 
             if (shopMainView != null) shopMainView.SetActive(false);
@@ -98,12 +108,37 @@ public class ShopManager : MonoBehaviour
             items[1].isEquipped = (currentWallpaper == 1); 
         }
         
-        // Check if Pet is enabled
+         // Check if Pet is enabled
          if (items.Length > 0)
         {
              items[0].isEquipped = (PlayerPrefs.GetInt("PetEnabled", 0) == 1);
         }
     }
+    
+    // --- NEW HELPER: UPDATE BUTTON IMAGES ---
+    void UpdateShopButtonsUI()
+    {
+        for (int i = 0; i < items.Length; i++)
+        {
+            // If we own the item, and we assigned the image in the inspector...
+            if (items[i].isOwned && items[i].buyButtonImage != null)
+            {
+                // 1. Swap the Sprite to "BOUGHT"
+                if (boughtButtonSprite != null)
+                {
+                    items[i].buyButtonImage.sprite = boughtButtonSprite;
+                }
+                
+                // 2. Turn off the Button component so it can't be clicked
+                Button btn = items[i].buyButtonImage.GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.interactable = false;
+                }
+            }
+        }
+    }
+    // ----------------------------------------
 
     // --- HELPER: FLASH WARNING ---
     IEnumerator ShowWarning()
@@ -196,4 +231,7 @@ public class ShopItem
     public Sprite icon; 
     public bool isOwned;
     public bool isEquipped;
+    
+    // --- NEW: Reference to the button's image in the UI ---
+    public Image buyButtonImage; 
 }

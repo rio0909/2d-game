@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 84e5a76f86253094daf5a6fae64ab2a9
+guid: ab0e2c1191a6e804790894107a7971d8
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -116,10 +116,10 @@ TextureImporter:
       name: Stylish_Wallpaper_0
       rect:
         serializedVersion: 2
-        x: 24
-        y: 20
-        width: 978
-        height: 710
+        x: 14
+        y: 11
+        width: 558
+        height: 406
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
