@@ -327,7 +327,7 @@ public class QuizManager : MonoBehaviour
             retryButton.SetActive(!isWin); 
         }
 
-        // --- NEW: Change the text color based on winning or losing! ---
+        // Change the text color based on winning or losing
         Color resultColor = isWin ? Color.green : Color.red;
 
         if (finalCorrectText != null) 
@@ -343,7 +343,7 @@ public class QuizManager : MonoBehaviour
             finalScoreText.text = scoreStr; 
             finalScoreText.maxVisibleCharacters = 0; 
         }
-        // --------------------------------------------------------------
+        //
 
         if (finalCorrectText != null)
         {

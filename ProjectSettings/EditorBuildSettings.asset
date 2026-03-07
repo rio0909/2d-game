@@ -12,7 +12,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Campus.unity
     guid: e383e4fca9115f3408012a6ed06d1272
   - enabled: 1
-    path: Assets/Scenes/LectureHall.unity
+    path: Assets/Scenes/LectureHall1.unity
     guid: 66c339a31f709fd479516c0b1969b647
   - enabled: 1
     path: Assets/Scenes/Gaming_Room.unity

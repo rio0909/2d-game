@@ -1,11 +1,11 @@
 using UnityEngine;
 
-// logic: We implement the "IInteractable" interface you already have!
+// logic- implementing the Interactable interface i already have
 public class NPC_Talk : MonoBehaviour, IInteractable
 {
     public void Interact()
     {
-        Debug.Log("Hi Rio! I see you have the Pro coding setup.");
-        // Later, we will add a real dialogue window 
+        Debug.Log("Hi Jassi! I see you have the Pro coding setup.");
+        // Later will add a real dialogue window 
     }
 }

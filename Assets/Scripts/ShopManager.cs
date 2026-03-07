@@ -5,7 +5,7 @@ using System.Collections;
 
 public class ShopManager : MonoBehaviour
 {
-    // --- UI REFERENCES ---
+    // grabbing all the UI stuff so it actually works
     [Header("UI Groups")]
     public GameObject shopMainView;        
     public GameObject purchasePopup;       
@@ -27,7 +27,7 @@ public class ShopManager : MonoBehaviour
     [Header("Shop Items")]
     public ShopItem[] items;               
     
-    // --- NEW: Shop UI Assets ---
+    // new shop ui assets cuz the old ones were kinda mid mumu
     [Header("Shop UI Assets")]
     public Sprite boughtButtonSprite; 
 
@@ -35,48 +35,46 @@ public class ShopManager : MonoBehaviour
 
     void OnEnable()
     {
-        // 1. LOAD SAVED DATA (Fixes the "Memory Loss")
+        // load saved data (finally fixed that weird memory loss bug)
         LoadShopProgress();
 
         UpdateScoreUI();
         
-        // 2. UPDATE BUTTON PICTURES
+        // update the button pictures so they look right
         UpdateShopButtonsUI(); 
         
-        // Reset the views
+        // reset the views so nothing overlaps
         if (shopMainView != null) shopMainView.SetActive(true);
         if (purchasePopup != null) purchasePopup.SetActive(false);
         if (warningText != null) warningText.gameObject.SetActive(false);
     }
 
-    // --- BUTTON: BUY ITEM ---
+    // the big buy item button logic
     public void BuySpecificItem(int index)
     {
         if (index < 0 || index >= items.Length) return;
         ShopItem item = items[index];
 
-        // 1. IF ALREADY OWNED
+        // check if they already bought it waaaa
         if (item.isOwned)
         {
-            // Do absolutely nothing! The button shouldn't be clickable anyway, 
-            // but this is a safety check.
+            // do absolutely nothing. the button shouldn't be clickable anyway.
             return; 
         }
 
-        // 2. IF BUYING NEW
+        // they actually wanna buy it
         if (SaveManager.TrySpendCoins(item.price))
         {
-            // Success!
+            // success! they had enough money
             item.isOwned = true;
             
-            // --- SAVE RECEIPT ---
+            // save the receipt so they don't yell at me later
             PlayerPrefs.SetInt("ShopItem_" + index, 1);
             PlayerPrefs.Save();
-            // --------------------
 
             UpdateScoreUI();
             
-            // Change the button pic and turn it off instantly
+            // change the button pic and turn it off instantly
             UpdateShopButtonsUI(); 
             
             OpenEquipPopup(index); 
@@ -84,52 +82,52 @@ public class ShopManager : MonoBehaviour
         }
         else
         {
-            // Fail
+            // fail - show the broke warning mumu
             StartCoroutine(ShowWarning());
         }
     }
 
-    // --- HELPER: LOAD SAVED ITEMS ---
+    // helper to load the saved items back in
     void LoadShopProgress()
     {
         for (int i = 0; i < items.Length; i++)
         {
-            // Check if we own it (1 = Yes)
+            // check if we own it (1 means yes)
             if (PlayerPrefs.GetInt("ShopItem_" + i, 0) == 1)
             {
                 items[i].isOwned = true;
             }
         }
 
-        // Check which wallpaper is equipped
+        // gotta check which wallpaper they have on
         int currentWallpaper = PlayerPrefs.GetInt("WallpaperID", 0);
         if (items.Length > 1) 
         {
             items[1].isEquipped = (currentWallpaper == 1); 
         }
         
-         // Check if Pet is enabled
+         // check if the little pet is out
          if (items.Length > 0)
         {
              items[0].isEquipped = (PlayerPrefs.GetInt("PetEnabled", 0) == 1);
         }
     }
     
-    // --- NEW HELPER: UPDATE BUTTON IMAGES ---
+    // helper to swap out button images when they buy stuff
     void UpdateShopButtonsUI()
     {
         for (int i = 0; i < items.Length; i++)
         {
-            // If we own the item, and we assigned the image in the inspector...
+            // if we own the item, and i remembered to assign the image in the inspector...
             if (items[i].isOwned && items[i].buyButtonImage != null)
             {
-                // 1. Swap the Sprite to "BOUGHT"
+                // swap the sprite to the bought one
                 if (boughtButtonSprite != null)
                 {
                     items[i].buyButtonImage.sprite = boughtButtonSprite;
                 }
                 
-                // 2. Turn off the Button component so it can't be clicked
+                // kill the button so they don't spam click it waaaa
                 Button btn = items[i].buyButtonImage.GetComponent<Button>();
                 if (btn != null)
                 {
@@ -138,9 +136,8 @@ public class ShopManager : MonoBehaviour
             }
         }
     }
-    // ----------------------------------------
 
-    // --- HELPER: FLASH WARNING ---
+    // flash the warning text if they are broke
     IEnumerator ShowWarning()
     {
         if (warningText != null)
@@ -151,7 +148,7 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    // --- HELPER: SETUP POPUP ---
+    // setup the popup window for equipping
     void OpenEquipPopup(int index)
     {
         currentItemIndex = index;
@@ -164,7 +161,7 @@ public class ShopManager : MonoBehaviour
             popupImage.preserveAspect = true; 
         }
 
-        // Update Button Text
+        // update button text depending on if it's equipped
         if (item.isEquipped)
         {
             equipButtonText.text = "Equipped";
@@ -179,29 +176,29 @@ public class ShopManager : MonoBehaviour
         purchasePopup.SetActive(true);
     }
 
-    // --- BUTTON: EQUIP ITEM ---
+    // equip item button logic mumu
     public void OnEquipButtonClicked()
     {
         ShopItem item = items[currentItemIndex];
         
-        // Mark as equipped locally
+        // mark as equipped locally
         item.isEquipped = true;
         
-        // Update visuals immediately
+        // update visuals immediately so it feels responsive
         equipButtonText.text = "Equipped";
         equipButton.interactable = false;
 
-        // Apply Logic
-        if (currentItemIndex == 0) // PET
+        // actually do the thing
+        if (currentItemIndex == 0) // pet
         {
             if (petObject != null) petObject.SetActive(true);
             PlayerPrefs.SetInt("PetEnabled", 1);
         }
-        else if (currentItemIndex == 1) // WALLPAPER
+        else if (currentItemIndex == 1) // wallpaper
         {
             PlayerPrefs.SetInt("WallpaperID", 1);
             
-            // Force PC to update if it's in the scene
+            // force pc to update if it's in the scene
             OSManager computer = FindObjectOfType<OSManager>();
             if (computer != null) computer.CheckAndSetWallpaper();
         }
@@ -209,7 +206,7 @@ public class ShopManager : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // --- BUTTON: CLOSE POPUP ---
+    // get this popup off my screen waaaa
     public void ClosePopup()
     {
         if (purchasePopup != null) purchasePopup.SetActive(false);
@@ -220,9 +217,9 @@ public class ShopManager : MonoBehaviour
     {
         if (scoreText != null) scoreText.text = "Credits: " + SaveManager.GetCoins();
     }
-} // <--- THIS CLOSING BRACKET ENDS THE CLASS
+} // please don't delete this bracket
 
-// --- THIS MUST BE OUTSIDE THE CLASS ---
+// this has to be outside the class or unity will throw a fit
 [System.Serializable]
 public class ShopItem
 {
@@ -232,6 +229,6 @@ public class ShopItem
     public bool isOwned;
     public bool isEquipped;
     
-    // --- NEW: Reference to the button's image in the UI ---
+    // reference to the button's image in the UI so we can swap it later mumu
     public Image buyButtonImage; 
 }

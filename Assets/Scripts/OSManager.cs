@@ -4,38 +4,43 @@ using System.Collections;
 
 public class OSManager : MonoBehaviour
 {
+    // dragging in all the ui stuff 
     [Header("UI Elements")]
     public GameObject startMenuPanel; 
     public GameObject desktopCanvas;  
 
+    // fancy shutdown video stuff
     [Header("Shutdown FX")]
     public GameObject shutdownScreen; 
     public VideoPlayer shutdownPlayer; 
     public float videoDuration = 3f;   
 
+    // where did the player go waaaa
     [Header("Player Reference")]
     public GameObject player; 
 
+    // backgrounds
     [Header("Wallpaper Settings")]
     public GameObject defaultScreen;       
     public GameObject stylishWallpaper;    
 
+    // hud stuff
     [Header("HUD Elements")]
     public GameObject shopIcon; 
 
     void OnEnable()
     {
-        // We only hide the icon if the desktop is actually showing
+        // only hide the icon if the desktop is actually on screen so it doesn't vanish forever
         UpdateShopIconVisibility();
         CheckAndSetWallpaper();
     }
 
-    // New helper to handle the icon logic
+    // helper to deal with the shop icon so it stops breaking mumu
     void UpdateShopIconVisibility()
     {
-        if (shopIcon == null) return;
+        if (shopIcon == null) return; // safety first 
 
-        // If the desktop canvas is active, hide shop. If not, show it.
+        // if they are looking at the desktop hide the shop, otherwise put it back
         if (desktopCanvas != null && desktopCanvas.activeInHierarchy)
         {
             shopIcon.SetActive(false);
@@ -48,6 +53,7 @@ public class OSManager : MonoBehaviour
 
     public void CheckAndSetWallpaper()
     {
+        // gotta check what wallpaper they actually bought 
         int wallpaperID = PlayerPrefs.GetInt("WallpaperID", 0);
 
         if (wallpaperID == 1)
@@ -64,6 +70,7 @@ public class OSManager : MonoBehaviour
 
     public void TriggerShutdownSequence()
     {
+        // time to go to sleep mumu
         StartCoroutine(PlayShutdownAndClose());
     }
 
@@ -71,12 +78,14 @@ public class OSManager : MonoBehaviour
     {
         if(startMenuPanel != null) startMenuPanel.SetActive(false);
 
+        // play the little video if i actually remembered to link the player in the inspector
         if(shutdownScreen != null && shutdownPlayer != null)
         {
             shutdownScreen.SetActive(true);
             shutdownPlayer.Play();
         }
 
+        // just stare at the screen for a few seconds waaaa
         yield return new WaitForSeconds(videoDuration);
         CloseComputer();
     }
@@ -85,6 +94,7 @@ public class OSManager : MonoBehaviour
     {
         if(shutdownScreen != null) shutdownScreen.SetActive(false);
 
+        // try to use the fancy scene transition
         SceneTransition transition = FindObjectOfType<SceneTransition>();
         
         if (transition != null)
@@ -93,13 +103,15 @@ public class OSManager : MonoBehaviour
         }
         else
         {
+            // fallback just in case the transition manager is missing again 
             if (desktopCanvas != null) desktopCanvas.SetActive(false);
             if (player != null) player.SetActive(true);
         }
 
-        // Force the shop icon back on when we close
+        // force the shop icon back on when we close or they can't buy anything waaaa
         if (shopIcon != null) shopIcon.SetActive(true);
 
+        // pop any badges they earned while staring at the pc
         BadgeManager bm = FindObjectOfType<BadgeManager>();
         if (bm != null)
         {
